@@ -1,14 +1,14 @@
 {
-  "name": "Vincent",
+  "name": "vincent",
   "version": "1.0.0",
   "description": "3d-earth",
   "keywords": [
-    "Vincent",
+    "vincent",
     "3d",
     "threejs",
     "typescript"
   ],
-  "author": "Vincent",
+  "author": "vincent",
   "license": "MIT",
   "scripts": {
     "dev": "webpack serve --mode development",
