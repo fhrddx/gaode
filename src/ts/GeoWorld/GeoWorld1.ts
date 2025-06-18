@@ -1,4 +1,4 @@
-import { AdditiveBlending, Color, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { AdditiveBlending, Color, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, TextureLoader, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -39,6 +39,7 @@ export default class GeoWorld0 {
 
   createMap(gridTexture, gridBlackTexture, bgTexture){
     this.createMainMesh();
+    this.createTrayMesh();
 
     const group = new Group();
     this.scene.add(group);
@@ -139,5 +140,28 @@ export default class GeoWorld0 {
         console.log('loader model fail' + error);
       })
     })
+  }
+
+  async createTrayMesh() {
+    const model: any = await this.loadOneModel('../../../static/models/taper1-p.glb');
+    const loader = new TextureLoader();
+    const texture = await loader.loadAsync('../../../static/images/wave.png');
+    const { width, height } = texture.image;
+    const frameX = width / height;
+    texture.wrapS = texture.wrapT = RepeatWrapping;
+    // 设置xy方向重复次数，x轴有frameX帧，仅取一帧
+    texture.repeat.set(1 / frameX, 1);
+    const material = new MeshStandardMaterial({
+        color: 0x1171ee,
+        map: texture,
+        transparent: true,
+        opacity: 0.8,
+        metalness: 0.0,
+        roughness: 0.6,
+        depthTest: true,
+        depthWrite: false
+    });
+    model.material = material;
+    this.scene.add(model);
   }
 }
