@@ -1,4 +1,4 @@
-import { AdditiveBlending, Color, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, TextureLoader, WebGLRenderer } from "three";
+import { AdditiveBlending, Color, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, Texture, TextureLoader, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -18,6 +18,10 @@ export default class GeoWorld0 {
   private floorBg: FloorBg;
 
   private mainModel: Mesh;
+  private trayModel: Mesh;
+  private frameX: number;
+  private waveTexture: Texture;
+  private offset: number = 0;
   
   constructor(option: IGeoWorld) {
     const basic = new Basic(option.dom);
@@ -90,6 +94,10 @@ export default class GeoWorld0 {
     if(this.mainModel){
       this.mainModel.rotation.z += 0.01;
     }
+    if(this.trayModel && this.waveTexture){
+      this.offset += 0.6;
+      this.waveTexture.offset.x = Math.floor(this.offset) / this.frameX;
+    }
   }
 
   async createMainMesh() {
@@ -153,21 +161,23 @@ export default class GeoWorld0 {
     const loader = new TextureLoader();
     const texture = await loader.loadAsync('../../../static/images/wave.png');
     const { width, height } = texture.image;
-    const frameX = width / height;
+    this.frameX = width / height;
+    this.waveTexture = texture;
     texture.wrapS = texture.wrapT = RepeatWrapping;
     // 设置xy方向重复次数，x轴有frameX帧，仅取一帧
-    texture.repeat.set(1 / frameX, 1);
+    texture.repeat.set(1 / this.frameX, 1);
     const material = new MeshStandardMaterial({
-        color: 0x1171ee,
-        map: texture,
-        transparent: true,
-        opacity: 0.8,
-        metalness: 0.0,
-        roughness: 0.6,
-        depthTest: true,
-        depthWrite: false
+      color: 0x1171ee,
+      map: texture,
+      transparent: true,
+      opacity: 0.8,
+      metalness: 0.0,
+      roughness: 0.6,
+      depthTest: true,
+      depthWrite: false
     });
     model.material = material;
     this.scene.add(model);
+    this.trayModel = model;
   }
 }
