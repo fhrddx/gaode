@@ -129,12 +129,7 @@ export default class GeoWorld0 {
     const loader = new GLTFLoader();
     return new Promise(resolve => {
       loader.load(sourceUrl, (gltf) => {
-        //获取模型
         const mesh = gltf.scene.children[0];
-        //放大模型以便观察
-        const size = 100;
-        mesh.scale.set(size, size, size);
-        this.scene.add(mesh);
         resolve(mesh);
       },
       function (xhr) {
