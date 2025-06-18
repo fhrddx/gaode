@@ -1,4 +1,4 @@
-import { AdditiveBlending, AxesHelper, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { AdditiveBlending, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
