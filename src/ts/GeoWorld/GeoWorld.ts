@@ -1,10 +1,11 @@
-import { AdditiveBlending, DoubleSide, GridHelper, Group, Mesh, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { AdditiveBlending, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
 import { Basic } from "../world/Basic";
 import { Resources } from "../world/Resources";
 import { FloorBg } from "./FloorBg";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export default class GeoWorld {
   private scene: Scene;
@@ -37,6 +38,8 @@ export default class GeoWorld {
   }
 
   createMap(gridTexture, gridBlackTexture, bgTexture){
+    this.createMainMesh();
+
     const group = new Group();
     this.scene.add(group);
 
@@ -81,5 +84,64 @@ export default class GeoWorld {
     if(this.floorBg){
       this.floorBg.tick(false);
     }
+  }
+
+  async createMainMesh() {
+    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
+    hemiLight.position.set(0, 100, 0);
+    this.scene.add(hemiLight);
+
+    const dirLight = new DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(0, 100, 10);
+    this.scene.add(dirLight);
+
+    //加载模型
+    const model: any = await this.loadOneModel('../../../static/models/taper1.glb');
+    //给模型换一种材质
+    const material = new MeshStandardMaterial({
+      //自身颜色
+      color: 0x1171ee,
+      //透明度
+      transparent: true,
+      opacity: 1,
+      //金属性
+      metalness: 0.0,
+      //粗糙度
+      roughness: 0.5,
+      //发光颜色
+      //emissive: new Color('#1171ee'), 
+      //emissiveIntensity: 0.2,
+      //blending: THREE.AdditiveBlending
+    });
+    //model.material = material;
+    model.traverse((child: any) => {
+      if (child.isMesh) {
+        child.material = material;
+      }
+    });
+    model.scale.set(1, 1, 1);
+    model.position.set(10, 8, 4);
+    this.scene.add(model);
+  }
+
+  loadOneModel(sourceUrl) {
+    const loader = new GLTFLoader();
+    return new Promise(resolve => {
+      loader.load(sourceUrl, (gltf) => {
+        //获取模型
+        const mesh = gltf.scene.children[0];
+        //放大模型以便观察
+        const size = 100;
+        mesh.scale.set(size, size, size);
+        this.scene.add(mesh);
+        resolve(mesh);
+      },
+      function (xhr) {
+        console.log(xhr);
+      },
+      function (error) {
+        console.log('loader model fail' + error);
+      })
+    })
   }
 }
