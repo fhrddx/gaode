@@ -1,4 +1,4 @@
-import { AdditiveBlending, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { AdditiveBlending, Color, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -109,8 +109,8 @@ export default class GeoWorld0 {
       //粗糙度
       roughness: 0.5,
       //发光颜色
-      //emissive: new Color('#1171ee'), 
-      //emissiveIntensity: 0.2,
+      emissive: new Color(0xff0000), 
+      emissiveIntensity: 0.2,
       //blending: THREE.AdditiveBlending
     });
     //model.material = material;
