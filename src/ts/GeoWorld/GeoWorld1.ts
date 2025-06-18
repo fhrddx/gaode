@@ -16,6 +16,8 @@ export default class GeoWorld0 {
   private resources: Resources;
 
   private floorBg: FloorBg;
+
+  private mainModel: Mesh;
   
   constructor(option: IGeoWorld) {
     const basic = new Basic(option.dom);
@@ -85,6 +87,9 @@ export default class GeoWorld0 {
     if(this.floorBg){
       this.floorBg.tick(false);
     }
+    if(this.mainModel){
+      this.mainModel.rotation.z += 0.01;
+    }
   }
 
   async createMainMesh() {
@@ -124,6 +129,7 @@ export default class GeoWorld0 {
     model.position.set(0, 0, 0);
     model.rotateZ(Math.PI / 4);
     this.scene.add(model);
+    this.mainModel = model;
   }
 
   loadOneModel(sourceUrl) {
