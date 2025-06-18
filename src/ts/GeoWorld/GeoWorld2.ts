@@ -1,4 +1,4 @@
-import { AdditiveBlending, Color, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, Texture, TextureLoader, WebGLRenderer } from "three";
+import { Color, DirectionalLight, GridHelper, Group, HemisphereLight, Mesh, MeshStandardMaterial, PerspectiveCamera, RepeatWrapping, Scene, Texture, TextureLoader, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -7,7 +7,7 @@ import { Resources } from "../world/Resources";
 import { FloorBg } from "./FloorBg";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-export default class GeoWorld1 {
+export default class GeoWorld2 {
   private scene: Scene;
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
@@ -21,7 +21,7 @@ export default class GeoWorld1 {
   private trayModel: Mesh;
   private frameX: number;
   private waveTexture: Texture;
-  private offset: number = 0;
+  private offset: number;
   
   constructor(option: IGeoWorld) {
     const basic = new Basic(option.dom);
@@ -31,22 +31,21 @@ export default class GeoWorld1 {
     this.renderer = basic.renderer;
     this.controls = basic.controls;
 
-    this.sizes = new Sizes({ dom: option.dom })
+    this.sizes = new Sizes({ dom: option.dom });
     this.sizes.$on('resize', () => {
       this.renderer.setSize(Number(this.sizes.viewport.width), Number(this.sizes.viewport.height));
       this.camera.aspect = Number(this.sizes.viewport.width) / Number(this.sizes.viewport.height);
       this.camera.updateProjectionMatrix();
     })
 
+    this.offset = 0;
+
     this.resources = new Resources(async () => {
-      this.createMap(this.resources.textures.grid, this.resources.textures.gridBlack, this.resources.textures.bg);
+      this.createMap();
     })
   }
 
-  createMap(gridTexture, gridBlackTexture, bgTexture){
-    this.createMainMesh();
-    this.createTrayMesh();
-
+  createMap(){
     const group = new Group();
     this.scene.add(group);
 
@@ -57,29 +56,8 @@ export default class GeoWorld1 {
     grid.renderOrder = 1;
     group.add(grid);
 
-    const radius3 = 180;
-    const plane3 = new PlaneGeometry(radius3, radius3);
-    const material3 = new MeshBasicMaterial({
-      map: bgTexture,
-      color: 0x30dcff,
-      transparent: true,
-      opacity: 0.5,
-      side: DoubleSide,
-      depthWrite: false,
-      blending: AdditiveBlending,
-    });
-    const mesh3 = new Mesh(plane3, material3);
-    mesh3.name = 'main_circle3';
-    mesh3.translateZ(-3);
-    mesh3.renderOrder = 4;
-    group.add(mesh3);
-
-    this.floorBg = new FloorBg({
-      group: group,
-      grid: gridTexture,
-      gridBlack: gridBlackTexture,
-    });
-    this.floorBg.create();
+    this.createMainMesh();
+    this.createTrayMesh();
 
     this.render();
   }
