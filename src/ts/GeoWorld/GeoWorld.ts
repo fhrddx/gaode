@@ -1,4 +1,4 @@
-import { AdditiveBlending, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { AdditiveBlending, AxesHelper, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -88,15 +88,18 @@ export default class GeoWorld {
 
   async createMainMesh() {
     const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
-    hemiLight.position.set(0, 100, 0);
+    hemiLight.position.set(100, 0, 0);
     this.scene.add(hemiLight);
 
     const dirLight = new DirectionalLight(0xffffff, 1.5);
-    dirLight.position.set(0, 100, 10);
+    dirLight.position.set(100, 10, 10);
     this.scene.add(dirLight);
 
+    const axesHelper = new AxesHelper(1500)
+    this.scene.add(axesHelper);
+
     //加载模型
-    const model: any = await this.loadOneModel('../../../static/models/taper1.glb');
+    const model: any = await this.loadOneModel('../../../static/models/taper2.glb');
     //给模型换一种材质
     const material = new MeshStandardMaterial({
       //自身颜色
@@ -120,7 +123,8 @@ export default class GeoWorld {
       }
     });
     model.scale.set(1, 1, 1);
-    model.position.set(10, 8, 4);
+    model.position.set(0, 0, 0);
+    model.rotateZ(Math.PI / 4);
     this.scene.add(model);
   }
 
