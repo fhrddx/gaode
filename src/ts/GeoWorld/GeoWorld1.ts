@@ -80,7 +80,7 @@ export default class GeoWorld0 {
       gridBlack: gridBlackTexture,
     });
     this.floorBg.create();
-
+    
     this.render();
   }
 
@@ -92,7 +92,7 @@ export default class GeoWorld0 {
       this.floorBg.tick(false);
     }
     if(this.mainModel){
-      this.mainModel.rotation.z += 0.01;
+      this.mainModel.rotation.z += 0.02;
     }
     if(this.trayModel && this.waveTexture){
       this.offset += 0.6;
@@ -134,10 +134,10 @@ export default class GeoWorld0 {
       }
     });
     model.scale.set(1, 1, 1);
-    model.position.set(0, 0, 0);
+    model.position.set(0, 0, 1);
     model.rotateZ(Math.PI / 4);
-    this.scene.add(model);
     this.mainModel = model;
+    this.scene.add(model);
   }
 
   loadOneModel(sourceUrl) {
@@ -162,9 +162,8 @@ export default class GeoWorld0 {
     const texture = await loader.loadAsync('../../../static/images/wave.png');
     const { width, height } = texture.image;
     this.frameX = width / height;
-    this.waveTexture = texture;
     texture.wrapS = texture.wrapT = RepeatWrapping;
-    // 设置xy方向重复次数，x轴有frameX帧，仅取一帧
+    //设置xy方向重复次数，x轴有frameX帧，仅取一帧
     texture.repeat.set(1 / this.frameX, 1);
     const material = new MeshStandardMaterial({
       color: 0x1171ee,
@@ -177,7 +176,8 @@ export default class GeoWorld0 {
       depthWrite: false
     });
     model.material = material;
-    this.scene.add(model);
+    this.waveTexture = texture;
     this.trayModel = model;
+    this.scene.add(model);
   }
 }
