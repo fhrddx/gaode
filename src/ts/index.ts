@@ -1,4 +1,4 @@
-import GeoWorld from './GeoWorld/GeoWorld2';
+import GeoWorld from './GeoWorld/GeoWorld3';
 
 const dom: HTMLElement = document.querySelector('#earth-canvas');
 
