@@ -1,7 +1,5 @@
-import GeoWorld3 from './GeoWorld/GeoWorld3';
+import GaoDeWorld from './Geode/GaoDeWorld';
+//import GeoWorld3 from './GeoWorld/GeoWorld3';
+//const dom: HTMLElement = document.querySelector('#earth-canvas');
 
-const dom: HTMLElement = document.querySelector('#earth-canvas');
-
-new GeoWorld3({
-  dom: dom
-})
+new GaoDeWorld('earth-canvas')
