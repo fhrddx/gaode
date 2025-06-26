@@ -1,4 +1,4 @@
-
+import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
 type ThreeLayerOption = {
   map: any,
@@ -19,6 +19,8 @@ export default class ThreeLayer{
   private customCoords: any;
   private id: string;
   private center: number[];
+
+  private layer: any;
 
   constructor(option: ThreeLayerOption){
     //地图是必须项
@@ -48,6 +50,84 @@ export default class ThreeLayer{
       const { lng, lat } = this.map.getCenter();
       this.center = [lng, lat];
     }
+  }
+
+  async init(){
+    this.layer = await this.createGlCustomLayer();
+  }
+
+  //创建非独立图层
+  createGlCustomLayer () {
+    return new Promise((resolve) => {
+      //@ts-ignore
+      const layer = new AMap.GLCustomLayer({
+        zIndex: 120,
+        //设置为true时才会执行init
+        visible: true, 
+        init: (gl) => {
+          this.initThree(gl);
+          resolve(layer);
+        },
+        render: (gl) => {
+          //注意：这个方法是放在关键帧里面执行的，所以调用会非常频繁
+          this.updateCamera();
+        }
+      })
+      this.map.add(layer)
+    })
+  }
+
+  //初始化three实例
+  initThree (gl) {
+    //第1步：创建scene
+    this.scene = new Scene();
+
+    //第2步：创建camera，注意这里并没有设置相机的位置，而是在关键帧方法里面执行updateCamera，从而设置相机位置
+    const { clientWidth, clientHeight } = this.container;
+    this.camera = new PerspectiveCamera(60, clientWidth / clientHeight, 100, 1 << 30);
+
+    //第3步：创建renderer，注意这里多加设置了渲染器的上下文gl
+    const renderer = new WebGLRenderer({
+      alpha: true,
+      antialias: false,
+      precision: 'highp',
+      context: gl
+    });
+    renderer.setSize(clientWidth, clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    //必须设置为false才能实现多个render的叠加
+    renderer.autoClear = false;
+    renderer.setClearAlpha(0);
+
+    this.renderer = renderer;
+  }
+
+  //更新相机
+  updateCamera () {
+    const { scene, renderer, camera, customCoords } = this;
+    if (!renderer) {
+      return;
+    }
+    //重新定位中心，这样才能使当前图层与Loca图层共存时显示正常
+    if (this.center) {
+      customCoords.setCenter(this.center);
+    }
+    const { near, far, fov, up, lookAt, position } = customCoords.getCameraParams();
+    //近平面
+    camera.near = near;
+    //远平面
+    camera.far = far;
+    //视野范围
+    camera.fov = fov;
+    camera.position.set(...position);
+    camera.up.set(...up);
+    camera.lookAt(...lookAt);
+    //更新相机坐标系
+    camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+    //这里必须执行，重新设置 three 的 gl 上下文状态
+    renderer.resetState();
   }
 
   //设置图层中心坐标，非常重要
