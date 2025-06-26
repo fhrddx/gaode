@@ -1,3 +1,4 @@
+import { Resources } from "../world/Resources";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
 
@@ -5,6 +6,7 @@ export default class GaoDeWorld {
   private mapManager: MapManager;
   private map: any;
   private layer: any;
+  private resources: Resources;
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -26,5 +28,12 @@ export default class GaoDeWorld {
     //高德地图加载完成，再加载 three.js 图层，注意这个顺序
     this.layer = new ThreeLayer({ map: this.map });
     await this.layer.init();
+
+    //创建3D场景中的物品
+    this.addMesh();
+  }
+
+  addMesh(){
+
   }
 }
