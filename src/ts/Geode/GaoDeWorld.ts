@@ -14,6 +14,8 @@ export default class GaoDeWorld {
   private trayModel;
   private waveTexture;
 
+  private offset = 0;
+
   constructor(containerId: string){
     this.mapManager = new MapManager({
       containerId: containerId,
@@ -45,6 +47,23 @@ export default class GaoDeWorld {
 
     this.createMainMesh();
     this.createTrayMesh();
+
+    this.render();
+  }
+
+  render() {
+    requestAnimationFrame(this.render.bind(this));
+    //注意：本来
+    //this.renderer.render(this.scene, this.camera);
+    //this.controls && this.controls.update();
+    if(this.mainModel){
+      this.mainModel.rotation.z += 0.05;
+    }
+    if(this.trayModel && this.waveTexture){
+      this.offset += 0.8;
+      this.waveTexture.offset.x = Math.floor(this.offset) / this.frameX;
+    }
+    this.map.render();
   }
 
    async createMainMesh() {
