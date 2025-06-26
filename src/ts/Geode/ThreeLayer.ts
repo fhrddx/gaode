@@ -1,4 +1,4 @@
-import { AxesHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
 type ThreeLayerOption = {
   map: any,
@@ -28,20 +28,17 @@ export default class ThreeLayer{
       throw Error('config.map invalid');
     }
     this.map = option.map;
-
     //默认取地图容器
     this.container = option.container || option.map.getContainer();
     if (!this.container){
       throw Error('config.container invalid');
     }
-
     //是否支持鼠标交互等操作
     this.interactAble = option.interact || false;
     //高德地图坐标转化工具
     this.customCoords = this.map.customCoords;
     //图层编号
     this.id = option.id || new Date().getTime().toString();
-
     //如果传过来的中心点跟高德地图的中心点不一致， 以传过来的中心点重新更新下地图坐标
     if (option.center) {
       this.updateCenter(option.center);
@@ -73,6 +70,7 @@ export default class ThreeLayer{
         render: (gl) => {
           //注意：这个方法是放在关键帧里面执行的，所以调用会非常频繁
           this.updateCamera();
+          this.map.render();
         }
       })
       this.map.add(layer);
@@ -83,11 +81,9 @@ export default class ThreeLayer{
   initThree (gl) {
     //第1步：创建scene
     this.scene = new Scene();
-
     //第2步：创建camera，注意这里并没有设置相机的位置，而是在关键帧方法里面执行updateCamera，从而设置相机位置
     const { clientWidth, clientHeight } = this.container;
     this.camera = new PerspectiveCamera(60, clientWidth / clientHeight, 100, 1 << 30);
-
     //第3步：创建renderer，注意这里多加设置了渲染器的上下文gl
     const renderer = new WebGLRenderer({
       alpha: true,
@@ -97,11 +93,9 @@ export default class ThreeLayer{
     });
     renderer.setSize(clientWidth, clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-
     //必须设置为false才能实现多个render的叠加
     renderer.autoClear = false;
     renderer.setClearAlpha(0);
-
     this.renderer = renderer;
   }
 

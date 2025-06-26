@@ -58,7 +58,6 @@ export default class GaoDeWorld {
       this.offset += 0.8;
       this.waveTexture.offset.x = Math.floor(this.offset) / this.frameX;
     }
-    this.map.render();
   }
 
    async createMainMesh() {
@@ -138,10 +137,8 @@ export default class GaoDeWorld {
       depthWrite: false
     });
     model.material = material;
-
     this.waveTexture = texture;
     this.trayModel = model;
-
     const scene = this.layer.scene;
     scene.add(model);
   }
