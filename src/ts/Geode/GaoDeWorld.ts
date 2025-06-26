@@ -2,7 +2,8 @@ import MapManager from "./MapManager";
 
 export default class GaoDeWorld {
   private mapManager: MapManager;
-  private map: any
+  private map: any;
+  private customerLayer: any;
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -14,11 +15,13 @@ export default class GaoDeWorld {
       mapStyle: 'amap://styles/dark',
       skyColor: 'rgba(140, 176, 222, 1)'
     });
-
-    this.init();
   }
 
   async init(){
+    await this.createGaoDeMap();
+  }
+
+  async createGaoDeMap(){
     const gaodeMap = await this.mapManager.createMap();
     this.map = gaodeMap;
   }
