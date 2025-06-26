@@ -52,8 +52,10 @@ export default class ThreeLayer{
     }
   }
 
+  //创建图层并初始化
   async init(){
     this.layer = await this.createGlCustomLayer();
+    this.eventListener();
   }
 
   //创建非独立图层
@@ -135,5 +137,15 @@ export default class ThreeLayer{
     if (lngLat instanceof Array && lngLat.length === 2) {
       this.customCoords.setCenter(lngLat);
     }
+  }
+
+  //尺寸监听
+  eventListener () {
+    window.addEventListener('resize', () => {
+      const { clientWidth, clientHeight } = this.container;
+      if (this.camera) {
+        this.camera.aspect = clientWidth / clientHeight;
+      }
+    })
   }
 }
