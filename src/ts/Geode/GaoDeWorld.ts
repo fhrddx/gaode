@@ -1,5 +1,4 @@
 import { AxesHelper, Color, DirectionalLight, HemisphereLight, MeshStandardMaterial, RepeatWrapping, TextureLoader } from "three";
-import { Resources } from "../world/Resources";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -9,12 +8,11 @@ export default class GaoDeWorld {
   private map: any;
   private layer: any;
 
+  private offset = 0;
   private frameX;
   private mainModel;
   private trayModel;
   private waveTexture;
-
-  private offset = 0;
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -32,11 +30,9 @@ export default class GaoDeWorld {
     //首先加载高德地图
     const gaodeMap = await this.mapManager.createMap();
     this.map = gaodeMap;
-
     //高德地图加载完成，再加载 three.js 图层，注意这个顺序
     this.layer = new ThreeLayer({ map: this.map });
     await this.layer.init();
-
     //创建3D场景中的物品
     this.addMesh();
   }
@@ -44,16 +40,15 @@ export default class GaoDeWorld {
   addMesh(){
     const axesHelper = new AxesHelper(15000);
     this.layer.scene.add(axesHelper);
-
     this.createMainMesh();
     this.createTrayMesh();
-
     this.render();
   }
 
   render() {
     requestAnimationFrame(this.render.bind(this));
-    //注意：本来
+    //注意：本来这个renderer是要设置的，但是在threeLayer里面已经执行了，所以不需要再操作，
+    //同理这里是混合图层，所以轨道控制器 controls 也不需要再设置了
     //this.renderer.render(this.scene, this.camera);
     //this.controls && this.controls.update();
     if(this.mainModel){
