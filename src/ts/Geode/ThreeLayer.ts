@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { AxesHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
 type ThreeLayerOption = {
   map: any,
@@ -20,7 +20,7 @@ export default class ThreeLayer{
   private id: string;
   private center: number[];
 
-  private layer: any;
+  public layer: any;
 
   constructor(option: ThreeLayerOption){
     //地图是必须项
@@ -54,6 +54,13 @@ export default class ThreeLayer{
 
   async init(){
     this.layer = await this.createGlCustomLayer();
+
+
+    const axesHelper = new AxesHelper(1500)
+    this.scene.add(axesHelper)
+
+
+
   }
 
   //创建非独立图层
@@ -73,7 +80,7 @@ export default class ThreeLayer{
           this.updateCamera();
         }
       })
-      this.map.add(layer)
+      this.map.add(layer);
     })
   }
 

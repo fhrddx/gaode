@@ -1,9 +1,10 @@
 import MapManager from "./MapManager";
+import ThreeLayer from "./ThreeLayer";
 
 export default class GaoDeWorld {
   private mapManager: MapManager;
   private map: any;
-  private customerLayer: any;
+  private layer: any;
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -18,11 +19,14 @@ export default class GaoDeWorld {
   }
 
   async init(){
-    await this.createGaoDeMap();
-  }
-
-  async createGaoDeMap(){
+    //首先加载高德地图
     const gaodeMap = await this.mapManager.createMap();
     this.map = gaodeMap;
+
+    //高德地图加载完成，再加载 three.js 图层，注意这个顺序
+    this.layer = new ThreeLayer({
+      map: this.map
+    });
+    await this.layer.init();
   }
 }
