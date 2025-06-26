@@ -1,13 +1,18 @@
-import { AxesHelper } from "three";
+import { AxesHelper, Color, DirectionalLight, HemisphereLight, MeshStandardMaterial, RepeatWrapping, TextureLoader } from "three";
 import { Resources } from "../world/Resources";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export default class GaoDeWorld {
   private mapManager: MapManager;
   private map: any;
   private layer: any;
-  private resources: Resources;
+
+  private frameX;
+  private mainModel;
+  private trayModel;
+  private waveTexture;
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -37,5 +42,98 @@ export default class GaoDeWorld {
   addMesh(){
     const axesHelper = new AxesHelper(15000);
     this.layer.scene.add(axesHelper);
+
+    this.createMainMesh();
+    this.createTrayMesh();
+  }
+
+   async createMainMesh() {
+    const scene = this.layer.scene;
+
+    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
+    hemiLight.position.set(100, 0, 0);
+    scene.add(hemiLight);
+  
+    const dirLight = new DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(100, 10, 10);
+    scene.add(dirLight);
+  
+    //加载模型
+    const model: any = await this.loadOneModel('../../../static/models/taper2.glb');
+    //给模型换一种材质
+    const material = new MeshStandardMaterial({
+      //自身颜色
+      color: 0x1171ee,
+      //透明度
+      transparent: true,
+      opacity: 1,
+      //金属性
+      metalness: 0.0,
+      //粗糙度
+      roughness: 0.5,
+      //发光颜色
+      emissive: new Color(0xff0000), 
+      emissiveIntensity: 0.2,
+      //blending: THREE.AdditiveBlending
+    });
+    //model.material = material;
+    model.traverse((child: any) => {
+      if (child.isMesh) {
+        child.material = material;
+      }
+    });
+    const scaleSize = 100;
+    model.scale.set(scaleSize, scaleSize, scaleSize);
+    model.position.set(0, 0, 1);
+    model.rotateZ(Math.PI / 4);
+    this.mainModel = model;
+
+    scene.add(model);
+  }
+
+  loadOneModel(sourceUrl) {
+    const loader = new GLTFLoader();
+    return new Promise(resolve => {
+      loader.load(sourceUrl, (gltf) => {
+        const mesh = gltf.scene.children[0];
+        resolve(mesh);
+      },
+      function (xhr) {
+        console.log(xhr);
+      },
+      function (error) {
+        console.log('loader model fail' + error);
+      })
+    })
+  }
+  
+  async createTrayMesh() {
+    const model: any = await this.loadOneModel('../../../static/models/taper1-p.glb');
+    const scaleSize = 100;
+    model.scale.set(scaleSize, scaleSize, scaleSize);
+    const loader = new TextureLoader();
+    const texture = await loader.loadAsync('../../../static/images/wave.png');
+    const { width, height } = texture.image;
+    this.frameX = width / height;
+    texture.wrapS = texture.wrapT = RepeatWrapping;
+    //设置xy方向重复次数，x轴有frameX帧，仅取一帧
+    texture.repeat.set(1 / this.frameX, 1);
+    const material = new MeshStandardMaterial({
+      color: 0x1171ee,
+      map: texture,
+      transparent: true,
+      opacity: 0.8,
+      metalness: 0.0,
+      roughness: 0.6,
+      depthTest: true,
+      depthWrite: false
+    });
+    model.material = material;
+
+    this.waveTexture = texture;
+    this.trayModel = model;
+
+    const scene = this.layer.scene;
+    scene.add(model);
   }
 }
