@@ -1,3 +1,4 @@
+import { AxesHelper } from "three";
 import { Resources } from "../world/Resources";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
@@ -34,6 +35,7 @@ export default class GaoDeWorld {
   }
 
   addMesh(){
-
+    const axesHelper = new AxesHelper(15000);
+    this.layer.scene.add(axesHelper);
   }
 }
