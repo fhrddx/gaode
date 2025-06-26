@@ -54,13 +54,6 @@ export default class ThreeLayer{
 
   async init(){
     this.layer = await this.createGlCustomLayer();
-
-
-    const axesHelper = new AxesHelper(1500)
-    this.scene.add(axesHelper)
-
-
-
   }
 
   //创建非独立图层
