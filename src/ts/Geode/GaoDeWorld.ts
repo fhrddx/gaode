@@ -24,9 +24,7 @@ export default class GaoDeWorld {
     this.map = gaodeMap;
 
     //高德地图加载完成，再加载 three.js 图层，注意这个顺序
-    this.layer = new ThreeLayer({
-      map: this.map
-    });
+    this.layer = new ThreeLayer({ map: this.map });
     await this.layer.init();
   }
 }
