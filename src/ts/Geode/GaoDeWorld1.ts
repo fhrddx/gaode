@@ -169,6 +169,12 @@ export default class GaoDeWorld1 {
     this.mainInstancedMesh = new InstancedMesh(this.mainModel.geometry, this.mainModelMaterial, length);
     this.initInstancedMesh(this.mainInstancedMesh);
     scene.add(this.mainInstancedMesh);
+    this.mainInstancedMesh.attrs = { modelId: 'main' };
+    //其次，底座模型创建一个实例化网格
+    this.trayInstancedMesh = new InstancedMesh(this.trayModel.geometry, this.trayModelMaterial, length);
+    this.initInstancedMesh(this.trayInstancedMesh);
+    scene.add(this.trayInstancedMesh);
+    this.trayInstancedMesh.attrs = { modelId: 'tray' };
   }
 
   //根据数据，填充实例化网格数据
