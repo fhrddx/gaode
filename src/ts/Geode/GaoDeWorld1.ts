@@ -3,7 +3,7 @@ import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-export default class GaoDeWorld0 {
+export default class GaoDeWorld1 {
   private mapManager: MapManager;
   private map: any;
   private layer: any;
