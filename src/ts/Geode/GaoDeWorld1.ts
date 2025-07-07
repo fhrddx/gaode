@@ -1,7 +1,8 @@
-import { AxesHelper, Color, DirectionalLight, HemisphereLight, MeshStandardMaterial, RepeatWrapping, TextureLoader } from "three";
+import { AxesHelper, Color, DirectionalLight, HemisphereLight, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import axios from "axios";
 
 export default class GaoDeWorld1 {
   private mapManager: MapManager;
@@ -11,8 +12,15 @@ export default class GaoDeWorld1 {
   private offset = 0;
   private frameX;
   private mainModel;
+  private mainModelMaterial;
   private trayModel;
+  private trayModelMaterial;
   private waveTexture;
+
+  private dataList: any[] = [];
+
+  //用于做定位和移动的介质
+  private dummy = new Object3D();
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -48,8 +56,123 @@ export default class GaoDeWorld1 {
     dirLight.position.set(100, 10, 10);
     scene.add(dirLight);
 
-    //创建3D场景中的物品
-    this.addMesh();
+    //加载并保存model
+    await this.saveModels();
+
+    //加载数据
+    await this.fetchData();
+  }
+
+  async saveModels(){
+    //第1步， mainModel加载并保存
+    this.mainModel = await this.loadOneModel('../../../static/models/taper2.glb');
+
+    //第2步， mainModelMaterial生成并保存
+    this.mainModelMaterial = new MeshStandardMaterial({
+      //自身颜色
+      color: 0x1171ee,
+      //透明度
+      transparent: true,
+      opacity: 1,
+      //金属性
+      metalness: 0.0,
+      //粗糙度
+      roughness: 0.5,
+      //发光颜色
+      emissive: new Color(0xff0000), 
+      emissiveIntensity: 0.2
+    });
+
+    //第3步， trayModel 加载并保存
+    this.trayModel = await this.loadOneModel('../../../static/models/taper1-p.glb');
+
+    //第4步，waveTexture 贴图加载并保存
+    const loader = new TextureLoader();
+    const texture = await loader.loadAsync('../../../static/images/wave.png');
+    const { width, height } = texture.image;
+    this.frameX = width / height;
+    texture.wrapS = texture.wrapT = RepeatWrapping;
+    //设置xy方向重复次数，x轴有frameX帧，仅取一帧
+    texture.repeat.set(1 / this.frameX, 1);
+    this.waveTexture = texture;
+
+    //第5步， trayModelMaterial 生成并保存
+    this.trayModelMaterial = new MeshStandardMaterial({
+      color: 0x1171ee,
+      map: texture,
+      transparent: true,
+      opacity: 0.8,
+      metalness: 0.0,
+      roughness: 0.6,
+      depthTest: true,
+      depthWrite: false
+    });
+  }
+
+  //加载外部模型
+  loadOneModel(sourceUrl) {
+    const loader = new GLTFLoader();
+    return new Promise(resolve => {
+      loader.load(sourceUrl, (gltf) => {
+        const mesh = gltf.scene.children[0];
+        resolve(mesh);
+      },
+      function (xhr) {
+        console.log(xhr);
+      },
+      function (error) {
+        console.log('loader model fail' + error);
+      })
+    })
+  }
+
+  //获取新的数据
+  async fetchData(){
+    const { data } = await axios.get(`/static/mock/gz.json`);
+    if(data && data.features && data.features.length > 0){
+      const list = data.features.map((item, index) => {
+        const [lng, lat] = item.geometry.coordinates;
+        const { name, scale} = item.properties;
+        const coords = this.map.customCoords.lngLatsToCoords([lng, lat]);
+        return {
+          lngLat: [lng, lat],
+          modelId: 'warning',
+          id: index,
+          type: index % 4,
+          name,
+          scale,
+          coords
+        }
+      })
+      this.dataList = list;
+    }    
+  }
+
+
+
+
+
+
+
+
+
+
+  createInstancedMeshes(){
+    const scene = this.layer.scene;
+    if(!scene){
+      return;
+    }
+    const hasData = this.dataList && this.dataList.length > 0;
+    if(!hasData){
+      return;
+    }
+    
+
+
+    
+
+
+
   }
 
 
@@ -69,15 +192,17 @@ export default class GaoDeWorld1 {
 
 
 
+  //------------------------------------------------------------------------------------------------------以上都是正确的
 
-
-  //------------------------------------------------------------------------------------------------------
+  /*
   addMesh(){
     this.createMainMesh();
     this.createTrayMesh();
     this.render();
   }
+  */
 
+  /*
   render() {
     requestAnimationFrame(this.render.bind(this));
     //本来这个renderer是要设置的，但是在threeLayer里面已经执行了，所以不需要再操作，
@@ -92,8 +217,10 @@ export default class GaoDeWorld1 {
       this.waveTexture.offset.x = Math.floor(this.offset) / this.frameX;
     }
   }
+  */
 
-   async createMainMesh() {
+  /*
+  async createMainMesh() {
     const scene = this.layer.scene;
     //加载模型
     const model: any = await this.loadOneModel('../../../static/models/taper2.glb');
@@ -123,27 +250,14 @@ export default class GaoDeWorld1 {
     this.mainModel = model;
     scene.add(model);
   }
-
-  loadOneModel(sourceUrl) {
-    const loader = new GLTFLoader();
-    return new Promise(resolve => {
-      loader.load(sourceUrl, (gltf) => {
-        const mesh = gltf.scene.children[0];
-        resolve(mesh);
-      },
-      function (xhr) {
-        console.log(xhr);
-      },
-      function (error) {
-        console.log('loader model fail' + error);
-      })
-    })
-  }
+  */
   
+  /*
   async createTrayMesh() {
     const model: any = await this.loadOneModel('../../../static/models/taper1-p.glb');
     const scaleSize = 100;
     model.scale.set(scaleSize, scaleSize, scaleSize);
+
     const loader = new TextureLoader();
     const texture = await loader.loadAsync('../../../static/images/wave.png');
     const { width, height } = texture.image;
@@ -151,6 +265,7 @@ export default class GaoDeWorld1 {
     texture.wrapS = texture.wrapT = RepeatWrapping;
     //设置xy方向重复次数，x轴有frameX帧，仅取一帧
     texture.repeat.set(1 / this.frameX, 1);
+
     const material = new MeshStandardMaterial({
       color: 0x1171ee,
       map: texture,
@@ -167,4 +282,5 @@ export default class GaoDeWorld1 {
     const scene = this.layer.scene;
     scene.add(model);
   }
+  */
 }
