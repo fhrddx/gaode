@@ -1,4 +1,4 @@
-import { AxesHelper, Color, DirectionalLight, HemisphereLight, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
+import { AxesHelper, BoxGeometry, Color, DirectionalLight, HemisphereLight, InstancedMesh, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -18,6 +18,9 @@ export default class GaoDeWorld1 {
   private waveTexture;
 
   private dataList: any[] = [];
+
+  private mainInstancedMesh;
+  private trayInstancedMesh;
 
   //用于做定位和移动的介质
   private dummy = new Object3D();
@@ -61,6 +64,9 @@ export default class GaoDeWorld1 {
 
     //加载数据
     await this.fetchData();
+
+    //加入实例化网格
+    this.createInstancedMeshes();
   }
 
   async saveModels(){
@@ -133,7 +139,7 @@ export default class GaoDeWorld1 {
       const list = data.features.map((item, index) => {
         const [lng, lat] = item.geometry.coordinates;
         const { name, scale} = item.properties;
-        const coords = this.map.customCoords.lngLatsToCoords([lng, lat]);
+        const coords = this.map.customCoords.lngLatsToCoords([[lng, lat]]);
         return {
           lngLat: [lng, lat],
           modelId: 'warning',
@@ -141,22 +147,14 @@ export default class GaoDeWorld1 {
           type: index % 4,
           name,
           scale,
-          coords
+          coords: coords[0]
         }
       })
       this.dataList = list;
-    }    
+    }
   }
 
-
-
-
-
-
-
-
-
-
+  //创建实例化网格
   createInstancedMeshes(){
     const scene = this.layer.scene;
     if(!scene){
@@ -166,121 +164,33 @@ export default class GaoDeWorld1 {
     if(!hasData){
       return;
     }
-    
-
-
-    
+    const length = this.dataList.length;
 
 
 
+
+    this.mainInstancedMesh = new InstancedMesh(this.mainModel.geometry, this.mainModelMaterial, length);
+    this.initInstancedMesh(this.mainInstancedMesh);
+    scene.add(this.mainInstancedMesh);
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //------------------------------------------------------------------------------------------------------以上都是正确的
-
-  /*
-  addMesh(){
-    this.createMainMesh();
-    this.createTrayMesh();
-    this.render();
-  }
-  */
-
-  /*
-  render() {
-    requestAnimationFrame(this.render.bind(this));
-    //本来这个renderer是要设置的，但是在threeLayer里面已经执行了，所以不需要再操作，
-    //同理这里是混合图层，所以轨道控制器 controls 也不需要再设置了
-    //this.renderer.render(this.scene, this.camera);
-    //this.controls && this.controls.update();
-    if(this.mainModel){
-      this.mainModel.rotation.z += 0.05;
+  //根据数据，填充实例化网格数据
+  initInstancedMesh(instancedMesh) {
+    for (let i = 0; i < this.dataList.length; i++) {
+      //获得转换后的坐标
+      const [x, y] = this.dataList[i].coords;
+      //每个实例的尺寸
+      const newSize = 20;
+      this.dummy.scale.set(newSize, newSize, newSize);
+      //更新每个实例的位置
+      this.dummy.position.set(x, y, i);
+      this.dummy.updateMatrix();
+      //更新实例 变换矩阵
+      instancedMesh.setMatrixAt(i, this.dummy.matrix);
+      //设置实例 颜色 
+      instancedMesh.setColorAt(i, new Color(i % 2 == 0 ? 0xfbdd4f : 0xff0000));
     }
-    if(this.trayModel && this.waveTexture){
-      this.offset += 0.8;
-      this.waveTexture.offset.x = Math.floor(this.offset) / this.frameX;
-    }
+    //强制更新实例
+    instancedMesh.instanceMatrix.needsUpdate = true;
   }
-  */
-
-  /*
-  async createMainMesh() {
-    const scene = this.layer.scene;
-    //加载模型
-    const model: any = await this.loadOneModel('../../../static/models/taper2.glb');
-    const material = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x1171ee,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      emissive: new Color(0xff0000), 
-      emissiveIntensity: 0.2
-    });
-    model.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material;
-      }
-    });
-    const scaleSize = 100;
-    model.scale.set(scaleSize, scaleSize, scaleSize);
-    model.position.set(0, 0, 1);
-    model.rotateZ(Math.PI / 4);
-    this.mainModel = model;
-    scene.add(model);
-  }
-  */
-  
-  /*
-  async createTrayMesh() {
-    const model: any = await this.loadOneModel('../../../static/models/taper1-p.glb');
-    const scaleSize = 100;
-    model.scale.set(scaleSize, scaleSize, scaleSize);
-
-    const loader = new TextureLoader();
-    const texture = await loader.loadAsync('../../../static/images/wave.png');
-    const { width, height } = texture.image;
-    this.frameX = width / height;
-    texture.wrapS = texture.wrapT = RepeatWrapping;
-    //设置xy方向重复次数，x轴有frameX帧，仅取一帧
-    texture.repeat.set(1 / this.frameX, 1);
-
-    const material = new MeshStandardMaterial({
-      color: 0x1171ee,
-      map: texture,
-      transparent: true,
-      opacity: 0.8,
-      metalness: 0.0,
-      roughness: 0.6,
-      depthTest: true,
-      depthWrite: false
-    });
-    model.material = material;
-    this.waveTexture = texture;
-    this.trayModel = model;
-    const scene = this.layer.scene;
-    scene.add(model);
-  }
-  */
 }
