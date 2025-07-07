@@ -165,10 +165,7 @@ export default class GaoDeWorld1 {
       return;
     }
     const length = this.dataList.length;
-
-
-
-
+    //首先，主模型创建一个实例化网格
     this.mainInstancedMesh = new InstancedMesh(this.mainModel.geometry, this.mainModelMaterial, length);
     this.initInstancedMesh(this.mainInstancedMesh);
     scene.add(this.mainInstancedMesh);
@@ -188,7 +185,7 @@ export default class GaoDeWorld1 {
       //更新实例 变换矩阵
       instancedMesh.setMatrixAt(i, this.dummy.matrix);
       //设置实例 颜色 
-      instancedMesh.setColorAt(i, new Color(i % 2 == 0 ? 0xfbdd4f : 0xff0000));
+      //instancedMesh.setColorAt(i, new Color(0xff0000));
     }
     //强制更新实例
     instancedMesh.instanceMatrix.needsUpdate = true;
