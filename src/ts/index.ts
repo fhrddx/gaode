@@ -10,6 +10,14 @@ new GeoWorld3({
 
 
 //案例二：高德地图+three.js 最基本的demo
+/*
 import GaoDeWorld0 from './Geode/GaoDeWorld0';
 const world = new GaoDeWorld0('earth-canvas');
+world.init();
+*/
+
+
+//案例三：高德地图+three.js 最基本的demo
+import GaoDeWorld1 from './Geode/GaoDeWorld1';
+const world = new GaoDeWorld1('earth-canvas');
 world.init();

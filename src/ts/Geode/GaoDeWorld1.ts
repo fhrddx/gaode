@@ -30,16 +30,49 @@ export default class GaoDeWorld1 {
     //首先加载高德地图
     const gaodeMap = await this.mapManager.createMap();
     this.map = gaodeMap;
+
     //高德地图加载完成，再加载 three.js 图层，注意这个顺序
     this.layer = new ThreeLayer({ map: this.map });
     await this.layer.init();
+
+    //添加辅助坐标、光照
+    const scene = this.layer.scene;
+    const axesHelper = new AxesHelper(15000);
+    this.layer.scene.add(axesHelper);
+    //模拟天空、底面的光照效果
+    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
+    hemiLight.position.set(100, 0, 0);
+    scene.add(hemiLight);
+    //添加平行光
+    const dirLight = new DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(100, 10, 10);
+    scene.add(dirLight);
+
     //创建3D场景中的物品
     this.addMesh();
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //------------------------------------------------------------------------------------------------------
   addMesh(){
-    const axesHelper = new AxesHelper(15000);
-    this.layer.scene.add(axesHelper);
     this.createMainMesh();
     this.createTrayMesh();
     this.render();
@@ -62,14 +95,6 @@ export default class GaoDeWorld1 {
 
    async createMainMesh() {
     const scene = this.layer.scene;
-    //模拟天空、底面的光照效果
-    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
-    hemiLight.position.set(100, 0, 0);
-    scene.add(hemiLight);
-    //添加平行光
-    const dirLight = new DirectionalLight(0xffffff, 1.5);
-    dirLight.position.set(100, 10, 10);
-    scene.add(dirLight);
     //加载模型
     const model: any = await this.loadOneModel('../../../static/models/taper2.glb');
     const material = new MeshStandardMaterial({
