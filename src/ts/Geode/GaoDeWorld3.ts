@@ -216,6 +216,91 @@ export default class GaoDeWorld3 {
 
   //监听相关的事件
   initEvent(){
+    if(!this.map){
+      return;
+    }
+    this.map.on('zoomchange', this.handelViewChange)
+  }
 
+  handelViewChange () {
+    //this.refreshTransformData();
+    //this.updatePOIMesh();
+  }
+
+  refreshTransformData () {
+    /*
+    const { _conf } = this
+
+    this._resolution = this.getResolution() * this._conf.scale
+
+    this._models.forEach(model => {
+      const {
+        size,
+        altitude,
+        modelId
+      } = model
+      // 模型大小
+      this._sizeMap[modelId] = this._resolution * 3 * (size !== undefined ? size : this._conf.scale)
+      // 模型垂直位置
+      this._altitudeMap[modelId] = this._resolution * altitude / 0.08
+    })
+
+    // 初始位置 + 最大垂直向上移动距离
+    this._maxMainAltitude = this._altitudeMap.main + _conf.maxMainAltitude * this._resolution / 0.08
+    // 初始位置 + 最小垂直向下移动距离
+    this._minMainAltitude = this._altitudeMap.main + _conf.minMainAltitude * this._resolution / 0.08
+    // 移动速度
+    this._mainAltitudeSpeed = _conf.mainAltitudeSpeed * this._resolution
+    // console.info(`this._altitudeMap.main ${this._altitudeMap.main},  minMainAltitude ${this._minMainAltitude}, maxMainAltitude ${this._maxMainAltitude}, mainAltitudeSpeed ${this._mainAltitudeSpeed}`)
+    */
+  }
+
+  updatePOIMesh () {
+    /*
+    const { _sizeMap } = this
+
+    // 更新模型尺寸
+    const mainMesh = this.getMeshByModelId('main')
+    const trayMesh = this.getMeshByModelId('tray')
+
+    // 重置纹理偏移
+    if (this?._mtMap?.tray?.map) {
+      this._mtMap.tray.map.offset.x = 0
+    }
+    // 重置初始位移
+    this._currentPosition = 0
+
+    for (let i = 0; i < this._data.length; i++) {
+      const [x, y] = this._data[i].coords
+      // 变换主体
+      this.updateMatrixAt(mainMesh, {
+        size: _sizeMap.main,
+        position: [x, y, this._altitudeMap.main + this.getRandomValue()],
+        rotation: [0, 0, 0]
+      }, i)
+      // 变换托盘
+      this.updateMatrixAt(trayMesh, {
+        size: _sizeMap.tray,
+        position: [x, y, this._altitudeMap.tray + this.getRandomValue()],
+        rotation: [0, 0, 0]
+      }, i)
+    }
+    // 强制更新instancedMesh实例
+    if (mainMesh?.instanceMatrix) {
+      mainMesh.instanceMatrix.needsUpdate = true
+    }
+    if (trayMesh?.instanceMatrix) {
+      trayMesh.instanceMatrix.needsUpdate = true
+    }
+    */
+  }
+
+  //获取高德地图的缩放程度
+  getResolution () {
+    if (typeof this.map.getResolution === 'function') {
+      return this.map.getResolution();
+    } else {
+      return null;
+    }
   }
 }
