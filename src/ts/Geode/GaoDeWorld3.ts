@@ -315,10 +315,25 @@ export default class GaoDeWorld3 {
   }
 
 
-  updateSizeByResolution(){
-    const newResolution = this.getResolution();
-    const newSize = newResolution * this.defaultSize / this.defaultResolution;
+  
 
+
+  
+
+
+
+  
+
+
+  //-----------------------------------------------------------------------------------------以下都是就正确的
+
+  //改变下实例化网格的尺寸
+  updateSizeByResolution(){
+    //获取最新的缩放尺寸
+    const newResolution = this.getResolution();
+    //根据首次加载的尺寸，计算出新的尺寸
+    const newSize = newResolution * this.defaultSize / this.defaultResolution;
+    //改变两个实例化网格的尺寸
     for (let i = 0; i < this.dataList.length; i++) {
       const item = this.dataList[i];
       const [x, y] = item.coords;
@@ -335,23 +350,12 @@ export default class GaoDeWorld3 {
         rotation: [0, 0, 0]
       }, i);
     }
-
+    //这里要设置为可更新，否则不生效
     if(this.mainInstancedMesh.instanceMatrix){
        this.mainInstancedMesh.instanceMatrix.needsUpdate = true;
        this.trayInstancedMesh.instanceMatrix.needsUpdate = true;
     }
   }
-
-
-
-  
-
-
-
-  
-
-
-  //-----------------------------------------------------------------------------------------以下都是就正确的
 
   /**
    * @description 更新指定网格体的单个示例的变化矩阵
