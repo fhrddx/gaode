@@ -165,7 +165,7 @@ export default class GaoDeWorld3 {
                 id: index,
                 type: index % 4,
                 name: item.stationName,
-                scale: 10,
+                scale: 1,
                 coords: coords[0]
             }
         })
