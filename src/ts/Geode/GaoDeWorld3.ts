@@ -22,7 +22,6 @@ export default class GaoDeWorld3 {
   private mainInstancedMesh;
   private trayInstancedMesh;
 
-  //用于做定位和移动的介质
   private dummy = new Object3D();
 
   private defaultSize = 20;
@@ -56,6 +55,7 @@ export default class GaoDeWorld3 {
     document.head.appendChild(script);
   }
 
+  //实例化所有的功能
   async init(){
     //首先加载高德地图
     const gaodeMap = await this.mapManager.createMap();
@@ -91,6 +91,7 @@ export default class GaoDeWorld3 {
     this.initEvent();
   }
 
+  //加载并保存model
   async saveModels(){
     //第1步， mainModel加载并保存
     this.mainModel = await this.loadOneModel('../../../static/models/taper2.glb');
@@ -222,8 +223,9 @@ export default class GaoDeWorld3 {
     if(!this.map){
       return;
     }
+    //第一次加载，参考这个缩放参数， 后面的size会根据这个等比例调整
     this.defaultResolution = this.getResolution();
-
+    //添加缩放监听事件
     this.handelViewChange = this.handelViewChange.bind(this);
     this.map.on('zoomchange', this.handelViewChange)
   }
