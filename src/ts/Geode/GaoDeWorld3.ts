@@ -83,6 +83,9 @@ export default class GaoDeWorld3 {
 
     //加入实例化网格
     this.createInstancedMeshes();
+
+    //监听相关的事件响应
+    this.initEvent();
   }
 
   async saveModels(){
@@ -209,5 +212,10 @@ export default class GaoDeWorld3 {
     }
     //强制更新实例
     instancedMesh.instanceMatrix.needsUpdate = true;
+  }
+
+  //监听相关的事件
+  initEvent(){
+
   }
 }
