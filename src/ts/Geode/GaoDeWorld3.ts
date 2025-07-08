@@ -224,6 +224,13 @@ export default class GaoDeWorld3 {
     this.map.on('zoomchange', this.handelViewChange)
   }
 
+
+
+
+  //-----------------------------------------------------------------------------------------以上都是就正确的
+
+
+
   handelViewChange () {
     //this.refreshTransformData();
     //this.updatePOIMesh();
@@ -295,6 +302,41 @@ export default class GaoDeWorld3 {
       trayMesh.instanceMatrix.needsUpdate = true
     }
     */
+  }
+
+
+
+  
+
+
+
+  
+
+
+  //-----------------------------------------------------------------------------------------以下都是就正确的
+
+  /**
+   * @description 更新指定网格体的单个示例的变化矩阵
+   * @param {instancedMesh} Mesh 网格体
+   * @param {Object} transform 变化设置，比如{size:1, position:[0,0,0], rotation:[0,0,0]}
+   * @param {Number} index 网格体实例索引值
+   */
+  updateMatrixAt (mesh, transform, index) {
+    if (!mesh) {
+      return;
+    }
+    const { size, position, rotation } = transform;
+    const { dummy } = this;
+    //1、更新尺寸
+    dummy.scale.set(size, size, size);
+    //2、更新位置
+    dummy.position.set(position[0], position[1], position[2]);
+    //3、更新旋转角度
+    dummy.rotation.x = rotation[0];
+    dummy.rotation.y = rotation[1];
+    dummy.rotation.z = rotation[2];
+    dummy.updateMatrix();
+    mesh.setMatrixAt(index, dummy.matrix);
   }
 
   //获取高德地图的缩放程度
