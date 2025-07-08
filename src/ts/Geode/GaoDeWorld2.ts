@@ -150,23 +150,21 @@ export default class GaoDeWorld2 {
 
   //获取新的数据
   async fetchData(){
-    const { data } = await axios.get(`/static/mock/gz.json`);
-    if(data && data.features && data.features.length > 0){
-      const list = data.features.map((item, index) => {
-        const [lng, lat] = item.geometry.coordinates;
-        const { name, scale} = item.properties;
-        const coords = this.map.customCoords.lngLatsToCoords([[lng, lat]]);
-        return {
-          lngLat: [lng, lat],
-          modelId: 'warning',
-          id: index,
-          type: index % 4,
-          name,
-          scale,
-          coords: coords[0]
-        }
-      })
-      this.dataList = list;
+    const { data } = await axios.get(`/static/mock/cn.json`);
+    if(data.data && data.data.length > 0){
+        const list = data.data.map((item, index) => {
+            const coords = this.map.customCoords.lngLatsToCoords([ [item.longitude, item.latitude] ]);
+            return {
+                lngLat: [item.longitude, item.latitude],
+                modelId: 'warning',
+                id: index,
+                type: index % 4,
+                name: item.stationName,
+                scale: 10,
+                coords: coords[0]
+            }
+        })
+        this.dataList = list;
     }
   }
 
