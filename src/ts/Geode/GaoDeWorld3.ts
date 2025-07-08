@@ -25,6 +25,8 @@ export default class GaoDeWorld3 {
   //用于做定位和移动的介质
   private dummy = new Object3D();
 
+  private defaultSize = 20;
+
   constructor(containerId: string){
     this.mapManager = new MapManager({
       containerId: containerId,
