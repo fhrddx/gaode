@@ -202,7 +202,7 @@ export default class GaoDeWorld3 {
       //获得转换后的坐标
       const [x, y] = this.dataList[i].coords;
       //每个实例的尺寸
-      const newSize = 20;
+      const newSize = this.defaultSize;
       this.dummy.scale.set(newSize, newSize, newSize);
       //更新每个实例的位置
       this.dummy.position.set(x, y, i);
