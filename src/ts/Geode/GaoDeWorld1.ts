@@ -190,7 +190,7 @@ export default class GaoDeWorld1 {
       this.dummy.updateMatrix();
       //更新实例 变换矩阵
       instancedMesh.setMatrixAt(i, this.dummy.matrix);
-      //设置实例 颜色 
+      //设置实例 颜色 (这一步要考虑下，是否要在这里修改)
       //instancedMesh.setColorAt(i, new Color(0xff0000));
     }
     //强制更新实例
