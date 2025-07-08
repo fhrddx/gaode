@@ -26,6 +26,7 @@ export default class GaoDeWorld3 {
   private dummy = new Object3D();
 
   private defaultSize = 20;
+  private defaultResolution;
 
   constructor(containerId: string){
     this.mapManager = new MapManager({
@@ -221,6 +222,9 @@ export default class GaoDeWorld3 {
     if(!this.map){
       return;
     }
+    this.defaultResolution = this.getResolution();
+
+    this.handelViewChange = this.handelViewChange.bind(this);
     this.map.on('zoomchange', this.handelViewChange)
   }
 
@@ -232,8 +236,12 @@ export default class GaoDeWorld3 {
 
 
   handelViewChange () {
+    //const r = this.getResolution();
+    //console.log('zoomChange:', r);
     //this.refreshTransformData();
     //this.updatePOIMesh();
+    //this.updateSizeByResolution = this.updateSizeByResolution.bind(this)
+    this.updateSizeByResolution();
   }
 
   refreshTransformData () {
@@ -302,6 +310,34 @@ export default class GaoDeWorld3 {
       trayMesh.instanceMatrix.needsUpdate = true
     }
     */
+  }
+
+
+  updateSizeByResolution(){
+    const newResolution = this.getResolution();
+    const newSize = newResolution * this.defaultSize / this.defaultResolution;
+
+    for (let i = 0; i < this.dataList.length; i++) {
+      const item = this.dataList[i];
+      const [x, y] = item.coords;
+      //变换主体
+      this.updateMatrixAt(this.mainInstancedMesh, {
+        size: newSize,
+        position: [x, y, 0],
+        rotation: [0, 0, 0]
+      }, i);
+      //变换下底盘的尺寸、位置、颜色
+      this.updateMatrixAt(this.trayInstancedMesh, {
+        size: newSize,
+        position: [x, y, 0],
+        rotation: [0, 0, 0]
+      }, i);
+    }
+
+    if(this.mainInstancedMesh.instanceMatrix){
+       this.mainInstancedMesh.instanceMatrix.needsUpdate = true;
+       this.trayInstancedMesh.instanceMatrix.needsUpdate = true;
+    }
   }
 
 
