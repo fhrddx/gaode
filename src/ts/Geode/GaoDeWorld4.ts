@@ -341,8 +341,34 @@ export default class GaoDeWorld4 {
     this.raycasterEvent();
   }
 
+  //射线拾取
   raycasterEvent(){
     console.log(1)
+    if (this.mouse.x === 0 && this.mouse.y === 0) {
+      return;
+    }
+    /*
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObjects(this.map?.hoverMeshs || [], true);
+    const intersectsHasData = intersects && intersects.length > 0;
+    if (!intersectsHasData) {
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      this.removeHover();
+      return;
+    }
+    const hoverMesh = intersects.find(
+      (i) =>
+        i.object &&
+        (i.object.name === 'area_mesh' ||
+          i.object.name === 'area_bar' ||
+          i.object.name === 'area_point'),
+    );
+    if (!hoverMesh) {
+      return;
+    }
+    this.handleHover(hoverMesh);
+    */
   }
   
 }
