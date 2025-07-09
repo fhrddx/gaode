@@ -102,7 +102,7 @@ export default class GaoDeWorld4 {
     this.initEvent();
 
     //逐帧处理
-
+    this.render();
   }
 
   //加载并保存model
@@ -243,18 +243,7 @@ export default class GaoDeWorld4 {
     this.handelViewChange = this.handelViewChange.bind(this);
     this.map.on('zoomchange', this.handelViewChange);
     //处理下mousemove事件
-    if(this.layer.container){
-      const container = this.map.getContainer();
-      container.addEventListener('mousemove', (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        const { left, top } = container.getBoundingClientRect();
-        this.mouse.x = ((x - left) / container.offsetWidth) * 2 - 1;
-        this.mouse.y = -((y - top) / container.offsetHeight) * 2 + 1;
-        this.tooltip.style.left = e.clientX - left + 20 + 'px';
-        this.tooltip.style.top = e.clientY - top + 5 + 'px';
-      })
-    }
+    this.mouseMoveEvent();
   }
 
   //处理下缩放变化
@@ -328,10 +317,26 @@ export default class GaoDeWorld4 {
 
   //----------------------------------------------------- 以上都是正确的
   
+  //光标移动事件
+  mouseMoveEvent(){
+    if(this.layer.container){
+      //下面这个container有几种写法，需要对比下哪一种比较合适：this.layer.container 、 document.getElementById('earth-canvas') as HTMLElement 、 this.map.getContainer()
+      const container = this.layer.container;
+      container.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        const { left, top } = container.getBoundingClientRect();
+        this.mouse.x = ((x - left) / container.offsetWidth) * 2 - 1;
+        this.mouse.y = -((y - top) / container.offsetHeight) * 2 + 1;
+        this.tooltip.style.left = e.clientX - left + 20 + 'px';
+        this.tooltip.style.top = e.clientY - top + 5 + 'px';
+      })
+    }
+  }
 
+  //逐帧变动
+  render(){
 
-
-
-
-
+  }
+  
 }
