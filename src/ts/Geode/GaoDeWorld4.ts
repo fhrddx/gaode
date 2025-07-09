@@ -27,7 +27,7 @@ export default class GaoDeWorld4 {
   private defaultSize = 20;
   private defaultResolution;
 
-  //hover 与 click 相关
+  //hover与click相关
   private tooltip = document.getElementById('tooltip') as HTMLElement
   private raycaster: Raycaster;
   private mouse: Vector2;
@@ -238,22 +238,18 @@ export default class GaoDeWorld4 {
     this.defaultResolution = this.getResolution();
     //添加缩放监听事件
     this.handelViewChange = this.handelViewChange.bind(this);
-    this.map.on('zoomchange', this.handelViewChange)
+    this.map.on('zoomchange', this.handelViewChange);
     //处理下mousemove事件
     if(this.layer.container){
       const container = this.map.getContainer();
       container.addEventListener('mousemove', (e) => {
-
         const x = e.clientX;
         const y = e.clientY;
-        
         const { left, top } = container.getBoundingClientRect();
         this.mouse.x = ((x - left) / container.offsetWidth) * 2 - 1;
         this.mouse.y = -((y - top) / container.offsetHeight) * 2 + 1;
-        //const tooltip = this.option.tooltip;
         this.tooltip.style.left = e.clientX - left + 20 + 'px';
         this.tooltip.style.top = e.clientY - top + 5 + 'px';
-        
       })
     }
   }
