@@ -373,19 +373,31 @@ export default class GaoDeWorld5 {
     const intersects = this.raycaster.intersectObjects(scene.children, true);
     const intersectsHasData = intersects && intersects.length > 0;
     if(!intersectsHasData){
-      this.removeHover();
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      this.currentInstanceId = -1;
+      this.tooltip.style.visibility = 'hidden';
+      this.tooltip.innerHTML = '';
       return;
     }
     const instancedMesh = intersects[0].object;
     //@ts-ignore
     if(!instancedMesh?.isInstancedMesh){
-      this.removeHover();
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      this.currentInstanceId = -1;
+      this.tooltip.style.visibility = 'hidden';
+      this.tooltip.innerHTML = '';
       return;
     }
     const intersection = this.raycaster.intersectObject(instancedMesh, false);
     const hasChindren = intersection && intersection.length > 0;
     if(!hasChindren){
-      this.removeHover();
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      this.currentInstanceId = -1;
+      this.tooltip.style.visibility = 'hidden';
+      this.tooltip.innerHTML = '';
       return;
     }
     //获取目标序号
@@ -398,18 +410,6 @@ export default class GaoDeWorld5 {
     this.tooltip.innerHTML = this.dataList[instanceId].name;
     this.mouse.x = 0;
     this.mouse.y = 0;
-  }
-
-  removeHover(){
-    this.mouse.x = 0;
-    this.mouse.y = 0;
-    this.currentInstanceId = -1;
-    this.tooltip.style.visibility = 'hidden';
-    this.tooltip.innerHTML = '';
-  }
-
-  addHover(){
-
   }
 
   //响应点击事件
