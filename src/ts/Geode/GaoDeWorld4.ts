@@ -37,7 +37,7 @@ export default class GaoDeWorld4 {
   private startClientY: number;
 
   constructor(containerId: string){
-    this.mouse = new Vector2();
+    this.mouse = new Vector2(0, 0);
 
     this.mapManager = new MapManager({
       containerId: containerId,
@@ -100,6 +100,9 @@ export default class GaoDeWorld4 {
 
     //监听相关的事件响应
     this.initEvent();
+
+    //逐帧处理
+
   }
 
   //加载并保存model
@@ -321,4 +324,13 @@ export default class GaoDeWorld4 {
       return null;
     }
   }
+
+
+  //----------------------------------------------------- 以上都是正确的
+
+
+
+
+
+
 }
