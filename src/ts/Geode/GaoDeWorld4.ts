@@ -35,6 +35,7 @@ export default class GaoDeWorld4 {
   private clickRaycaster: Raycaster;
   private startClientX: number;
   private startClientY: number;
+  private requestAnimationFrameId: number = 0;
 
   constructor(containerId: string){
     this.mouse = new Vector2(0, 0);
@@ -336,7 +337,12 @@ export default class GaoDeWorld4 {
 
   //逐帧变动
   render(){
+    this.requestAnimationFrameId = requestAnimationFrame(this.render.bind(this));
+    this.raycasterEvent();
+  }
 
+  raycasterEvent(){
+    console.log(1)
   }
   
 }
