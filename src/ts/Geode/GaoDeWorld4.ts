@@ -41,6 +41,9 @@ export default class GaoDeWorld4 {
   constructor(containerId: string){
     this.mouse = new Vector2(0, 0);
     this.raycaster = new Raycaster();
+    this.clickRaycaster = new Raycaster();
+    this.startClientX = 0;
+    this.startClientY = 0;
 
     this.mapManager = new MapManager({
       containerId: containerId,
@@ -279,8 +282,8 @@ export default class GaoDeWorld4 {
     }
     //这里要设置为可更新，否则不生效
     if(this.mainInstancedMesh.instanceMatrix){
-       this.mainInstancedMesh.instanceMatrix.needsUpdate = true;
-       this.trayInstancedMesh.instanceMatrix.needsUpdate = true;
+      this.mainInstancedMesh.instanceMatrix.needsUpdate = true;
+      this.trayInstancedMesh.instanceMatrix.needsUpdate = true;
     }
   }
 
@@ -331,6 +334,22 @@ export default class GaoDeWorld4 {
         this.tooltip.style.left = e.clientX - left + 20 + 'px';
         this.tooltip.style.top = e.clientY - top + 5 + 'px';
       })
+      //下面这两个事件，联合起来，判断点击事件
+      container.addEventListener('mousedown', (e) => {
+        this.startClientX = e.clientX;
+        this.startClientY = e.clientY;
+      });
+      container.addEventListener('mouseup', (e) => {
+        const distant =
+          Math.abs(e.clientX - this.startClientX) + Math.abs(e.clientY - this.startClientY);
+        if (distant > 2) {
+          return;
+        }
+        const { left, top } = container.getBoundingClientRect();
+        const x = ((e.clientX - left) / container.offsetWidth) * 2 - 1;
+        const y = -((e.clientY - top) / container.offsetHeight) * 2 + 1;
+        this.click(x, y);
+      });
     }
   }
 
@@ -387,5 +406,32 @@ export default class GaoDeWorld4 {
     this.tooltip.innerHTML = this.dataList[instanceId].name;
     this.mouse.x = 0;
     this.mouse.y = 0;
+  }
+
+  //响应点击事件
+  click(x: number, y: number){
+    const { camera, scene } = this.layer;
+    const position = new Vector2(x, y);
+    this.raycaster.setFromCamera(position, camera);
+    const intersects = this.raycaster.intersectObjects(scene.children, true);
+    const intersectsHasData = intersects && intersects.length > 0;
+    if(!intersectsHasData){
+      return;
+    }
+    const instancedMesh = intersects[0].object;
+    //@ts-ignore
+    if(!instancedMesh?.isInstancedMesh){
+      return;
+    }
+    const intersection = this.raycaster.intersectObject(instancedMesh, false);
+    const hasChindren = intersection && intersection.length > 0;
+    if(!hasChindren){
+      return;
+    }
+    //获取目标序号
+    const { instanceId } = intersection[0];
+    const item = this.dataList[instanceId];
+    const msg = `你点击的编号是：${instanceId}, 站点是：${item.name}`;
+    alert(msg);
   }
 }
