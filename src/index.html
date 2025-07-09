@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>GhostCat</title>
+	<title>高德地图Demo</title>
   <meta charset="utf-8">
   <meta name="referrer" content="no-referrer">
 </head>
@@ -19,11 +19,27 @@
   #earth-canvas{
     height: 100%;
     width: 100%;
-    background: #0c121a;
+    /*background: #0c121a;*/
     cursor: pointer;
+  }
+  #tooltip {
+    position: absolute;
+    z-index: 1000;
+    background: #0c121a;
+    color: #fff;
+    visibility: hidden;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
   }
 </style>
 <body>
-  <div id="earth-canvas"></div>
+  <div id="earth-canvas">
+    <div id="tooltip"></div>
+  </div>
 </body>
 </html>
