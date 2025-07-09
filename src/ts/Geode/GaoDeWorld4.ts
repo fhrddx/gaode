@@ -1,4 +1,4 @@
-import { AxesHelper, BoxGeometry, Color, DirectionalLight, HemisphereLight, InstancedMesh, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
+import { AxesHelper, BoxGeometry, Color, DirectionalLight, HemisphereLight, InstancedMesh, Intersection, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, Raycaster, RepeatWrapping, TextureLoader, Vector2 } from "three";
 import MapManager from "./MapManager";
 import ThreeLayer from "./ThreeLayer";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -27,7 +27,18 @@ export default class GaoDeWorld4 {
   private defaultSize = 20;
   private defaultResolution;
 
+  //hover 与 click 相关
+  private tooltip = document.getElementById('tooltip') as HTMLElement
+  private raycaster: Raycaster;
+  private mouse: Vector2;
+  private currentHoverMesh: Intersection | undefined;
+  private clickRaycaster: Raycaster;
+  private startClientX: number;
+  private startClientY: number;
+
   constructor(containerId: string){
+    this.mouse = new Vector2();
+
     this.mapManager = new MapManager({
       containerId: containerId,
       viewMode: '3D',         
@@ -159,19 +170,19 @@ export default class GaoDeWorld4 {
   async fetchData(){
     const { data } = await axios.get(`/static/mock/cn.json`);
     if(data.data && data.data.length > 0){
-        const list = data.data.map((item, index) => {
-            const coords = this.map.customCoords.lngLatsToCoords([ [item.longitude, item.latitude] ]);
-            return {
-                lngLat: [item.longitude, item.latitude],
-                modelId: 'warning',
-                id: index,
-                type: index % 4,
-                name: item.stationName,
-                scale: 1,
-                coords: coords[0]
-            }
-        })
-        this.dataList = list;
+      const list = data.data.map((item, index) => {
+        const coords = this.map.customCoords.lngLatsToCoords([ [item.longitude, item.latitude] ]);
+        return {
+          lngLat: [item.longitude, item.latitude],
+          modelId: 'warning',
+          id: index,
+          type: index % 4,
+          name: item.stationName,
+          scale: 1,
+          coords: coords[0]
+        }
+      })
+      this.dataList = list;
     }
   }
 
@@ -228,6 +239,23 @@ export default class GaoDeWorld4 {
     //添加缩放监听事件
     this.handelViewChange = this.handelViewChange.bind(this);
     this.map.on('zoomchange', this.handelViewChange)
+    //处理下mousemove事件
+    if(this.layer.container){
+      const container = this.map.getContainer();
+      container.addEventListener('mousemove', (e) => {
+
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        const { left, top } = container.getBoundingClientRect();
+        this.mouse.x = ((x - left) / container.offsetWidth) * 2 - 1;
+        this.mouse.y = -((y - top) / container.offsetHeight) * 2 + 1;
+        //const tooltip = this.option.tooltip;
+        this.tooltip.style.left = e.clientX - left + 20 + 'px';
+        this.tooltip.style.top = e.clientY - top + 5 + 'px';
+        
+      })
+    }
   }
 
   //处理下缩放变化
