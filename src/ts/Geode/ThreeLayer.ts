@@ -12,15 +12,15 @@ export default class ThreeLayer{
   public scene;
   public camera;
   public renderer;
-
+  
   private map;
-  private container;
   private interactAble: boolean;
   private customCoords: any;
   private id: string;
   private center: number[];
 
   public layer: any;
+  public container;
 
   constructor(option: ThreeLayerOption){
     //地图是必须项
