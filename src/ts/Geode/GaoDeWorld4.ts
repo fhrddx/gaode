@@ -317,9 +317,6 @@ export default class GaoDeWorld4 {
     }
   }
 
-
-  //----------------------------------------------------- 以上都是正确的
-  
   //光标移动事件
   mouseMoveEvent(){
     if(this.layer.container){
