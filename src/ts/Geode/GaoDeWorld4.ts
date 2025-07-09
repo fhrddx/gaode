@@ -366,11 +366,35 @@ export default class GaoDeWorld4 {
       this.currentInstanceId = -1;
       return;
     }
-    const intersection = this.raycaster.intersectObject(instancedMesh, false)
+    const intersection = this.raycaster.intersectObject(instancedMesh, false);
+    const hasChindren = intersection && intersection.length > 0;
+    if(!hasChindren){
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      this.currentInstanceId = -1;
+      return;
+    }
     //获取目标序号
-    const { instanceId } = intersection[0]
+    const { instanceId } = intersection[0];
+    if(this.currentInstanceId === instanceId){
+      return;
+    }
+
+    this.tooltip.style.visibility = 'visible';
+    this.tooltip.innerHTML = this.dataList[instanceId].name;
+
+
+    //console.log(JSON.stringify(this.dataList[instanceId]));
+
+
     //设置选中状态
     console.log('instanceId: ' + instanceId);
+
+    //tooltip.style.visibility = 'visible';
+    // tooltip.innerHTML
+
+
+
 
 
 
