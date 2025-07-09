@@ -361,6 +361,9 @@ export default class GaoDeWorld5 {
   render(){
     this.requestAnimationFrameId = requestAnimationFrame(this.render.bind(this));
     this.raycasterEvent();
+    //更新下动画
+    this.currentAngle = (this.currentAngle + 0.05) % this.maxAngle;
+
   }
 
   //射线拾取
