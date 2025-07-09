@@ -356,6 +356,8 @@ export default class GaoDeWorld4 {
       this.mouse.x = 0;
       this.mouse.y = 0;
       this.currentInstanceId = -1;
+      this.tooltip.style.visibility = 'hidden';
+      this.tooltip.innerHTML = '';
       return;
     }
     const instancedMesh = intersects[0].object;
@@ -364,6 +366,8 @@ export default class GaoDeWorld4 {
       this.mouse.x = 0;
       this.mouse.y = 0;
       this.currentInstanceId = -1;
+      this.tooltip.style.visibility = 'hidden';
+      this.tooltip.innerHTML = '';
       return;
     }
     const intersection = this.raycaster.intersectObject(instancedMesh, false);
@@ -372,6 +376,8 @@ export default class GaoDeWorld4 {
       this.mouse.x = 0;
       this.mouse.y = 0;
       this.currentInstanceId = -1;
+      this.tooltip.style.visibility = 'hidden';
+      this.tooltip.innerHTML = '';
       return;
     }
     //获取目标序号
@@ -379,47 +385,10 @@ export default class GaoDeWorld4 {
     if(this.currentInstanceId === instanceId){
       return;
     }
-
+    this.currentInstanceId = instanceId;
     this.tooltip.style.visibility = 'visible';
     this.tooltip.innerHTML = this.dataList[instanceId].name;
-
-
-    //console.log(JSON.stringify(this.dataList[instanceId]));
-
-
-    //设置选中状态
-    console.log('instanceId: ' + instanceId);
-
-    //tooltip.style.visibility = 'visible';
-    // tooltip.innerHTML
-
-
-
-
-
-
-
-
-    /*
-   
-    if (!intersectsHasData) {
-      this.mouse.x = 0;
-      this.mouse.y = 0;
-      this.removeHover();
-      return;
-    }
-    const hoverMesh = intersects.find(
-      (i) =>
-        i.object &&
-        (i.object.name === 'area_mesh' ||
-          i.object.name === 'area_bar' ||
-          i.object.name === 'area_point'),
-    );
-    if (!hoverMesh) {
-      return;
-    }
-    this.handleHover(hoverMesh);
-    */
+    this.mouse.x = 0;
+    this.mouse.y = 0;
   }
-  
 }
