@@ -36,6 +36,7 @@ export default class GaoDeWorld4 {
   private startClientX: number;
   private startClientY: number;
   private requestAnimationFrameId: number = 0;
+  private currentInstanceId: number = -1;
 
   constructor(containerId: string){
     this.mouse = new Vector2(0, 0);
@@ -354,6 +355,7 @@ export default class GaoDeWorld4 {
     if(!intersectsHasData){
       this.mouse.x = 0;
       this.mouse.y = 0;
+      this.currentInstanceId = -1;
       return;
     }
     const instancedMesh = intersects[0].object;
@@ -361,6 +363,7 @@ export default class GaoDeWorld4 {
     if(!instancedMesh?.isInstancedMesh){
       this.mouse.x = 0;
       this.mouse.y = 0;
+      this.currentInstanceId = -1;
       return;
     }
     const intersection = this.raycaster.intersectObject(instancedMesh, false)
