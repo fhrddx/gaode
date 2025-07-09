@@ -39,6 +39,7 @@ export default class GaoDeWorld4 {
 
   constructor(containerId: string){
     this.mouse = new Vector2(0, 0);
+    this.raycaster = new Raycaster();
 
     this.mapManager = new MapManager({
       containerId: containerId,
@@ -343,14 +344,37 @@ export default class GaoDeWorld4 {
 
   //射线拾取
   raycasterEvent(){
-    console.log(1)
     if (this.mouse.x === 0 && this.mouse.y === 0) {
       return;
     }
-    /*
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersects = this.raycaster.intersectObjects(this.map?.hoverMeshs || [], true);
+    const { camera, scene } = this.layer;
+    this.raycaster.setFromCamera(this.mouse, camera);
+    const intersects = this.raycaster.intersectObjects(scene.children, true);
     const intersectsHasData = intersects && intersects.length > 0;
+    if(!intersectsHasData){
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      return;
+    }
+    const instancedMesh = intersects[0].object;
+    //@ts-ignore
+    if(!instancedMesh?.isInstancedMesh){
+      this.mouse.x = 0;
+      this.mouse.y = 0;
+      return;
+    }
+    const intersection = this.raycaster.intersectObject(instancedMesh, false)
+    //获取目标序号
+    const { instanceId } = intersection[0]
+    //设置选中状态
+    console.log('instanceId: ' + instanceId);
+
+
+
+
+
+    /*
+   
     if (!intersectsHasData) {
       this.mouse.x = 0;
       this.mouse.y = 0;
