@@ -366,15 +366,16 @@ export default class GaoDeWorld5 {
     //计算出新的尺寸
     if(this.mainInstancedMesh && this.currentInstanceId > 0 && this.currentInstanceId < this.dataList.length){
       const newResolution = this.getResolution();
+      //选中的对象放大1.5倍
       const newSize = 1.5 * newResolution * this.defaultSize / this.defaultResolution;
       const item = this.dataList[this.currentInstanceId];
       const [x, y] = item.coords;
       this.updateMatrixAt(this.mainInstancedMesh, {
-        size: newSize, // 选中的对象放大1.2倍
+        size: newSize,
         position: [x, y, 0],
         rotation: [0, 0, this.currentAngle]
-      }, this.currentInstanceId)
-      this.mainInstancedMesh.instanceMatrix.needsUpdate = true
+      }, this.currentInstanceId);
+      this.mainInstancedMesh.instanceMatrix.needsUpdate = true;
     }
   }
 
