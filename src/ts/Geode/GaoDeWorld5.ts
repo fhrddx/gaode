@@ -391,9 +391,9 @@ export default class GaoDeWorld5 {
     if(!intersectsHasData){
       this.mouse.x = 0;
       this.mouse.y = 0;
-      this.currentInstanceId = -1;
       this.tooltip.style.visibility = 'hidden';
       this.tooltip.innerHTML = '';
+      this.resetHover();
       return;
     }
     const instancedMesh = intersects[0].object;
@@ -401,9 +401,9 @@ export default class GaoDeWorld5 {
     if(!instancedMesh?.isInstancedMesh){
       this.mouse.x = 0;
       this.mouse.y = 0;
-      this.currentInstanceId = -1;
       this.tooltip.style.visibility = 'hidden';
       this.tooltip.innerHTML = '';
+      this.resetHover();
       return;
     }
     const intersection = this.raycaster.intersectObject(instancedMesh, false);
@@ -411,9 +411,9 @@ export default class GaoDeWorld5 {
     if(!hasChindren){
       this.mouse.x = 0;
       this.mouse.y = 0;
-      this.currentInstanceId = -1;
       this.tooltip.style.visibility = 'hidden';
       this.tooltip.innerHTML = '';
+      this.resetHover();
       return;
     }
     //获取目标序号
@@ -421,6 +421,7 @@ export default class GaoDeWorld5 {
     if(this.currentInstanceId === instanceId){
       return;
     }
+    this.resetHover();
     this.currentInstanceId = instanceId;
     this.tooltip.style.visibility = 'visible';
     this.tooltip.innerHTML = this.dataList[instanceId].name;
@@ -428,9 +429,26 @@ export default class GaoDeWorld5 {
     this.mouse.y = 0;
   }
 
-  //恢复hover未选中的状态
+  //恢复hover未选中的状态, 包括尺寸、颜色、位置等等
   resetHover(){
+    const hasHoverId = this.currentInstanceId > 0 && this.currentInstanceId < this.dataList.length;
+    if(!hasHoverId){
+      return;
+    }
+    
+    const newResolution = this.getResolution();
+    //选中的对象放大1.5倍
+    const newSize = newResolution * this.defaultSize / this.defaultResolution;
+    const item = this.dataList[this.currentInstanceId];
+    const [x, y] = item.coords;
+    this.updateMatrixAt(this.mainInstancedMesh, {
+      size: newSize,
+      position: [x, y, 0],
+      rotation: [0, 0, 0]
+    }, this.currentInstanceId);
+    this.mainInstancedMesh.instanceMatrix.needsUpdate = true;
 
+    this.currentInstanceId = -1;
   }
 
   //响应点击事件
