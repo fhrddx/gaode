@@ -428,6 +428,11 @@ export default class GaoDeWorld5 {
     this.mouse.y = 0;
   }
 
+  //恢复hover未选中的状态
+  resetHover(){
+
+  }
+
   //响应点击事件
   click(x: number, y: number){
     const { camera, scene } = this.layer;
