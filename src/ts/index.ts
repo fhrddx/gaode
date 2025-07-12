@@ -44,7 +44,7 @@ const world = new GaoDeWorld4('earth-canvas');
 world.init();
 */
 
-//案例六：高德地图+three.js 中国区上百个站点的标注 + hover功能 + 高亮旋转动画  这个是最终版的demo
+//案例六：高德地图+three.js 中国区上百个站点的标注 + hover功能 + 高亮旋转动画 + click 这个是最终版的demo
 import GaoDeWorld5 from './Geode/GaoDeWorld5';
 const world = new GaoDeWorld5('earth-canvas');
 world.init();
