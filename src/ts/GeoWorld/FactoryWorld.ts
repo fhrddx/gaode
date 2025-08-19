@@ -133,6 +133,38 @@ export default class FactoryWorld {
     model.position.set(0, -20, 14);
     model.rotateX(Math.PI / 2);
     this.scene.add(model);
+
+
+
+    //加载模型
+    const model2: any = await this.loadOneModel('../../../static/models/factory/sigenstackn.glb');
+    //给模型换一种材质
+    const material2 = new MeshStandardMaterial({
+      //自身颜色
+      color: 0x1171ee,
+      //透明度
+      transparent: true,
+      opacity: 1,
+      //金属性
+      metalness: 0.0,
+      //粗糙度
+      roughness: 0.5,
+      //发光颜色
+      //emissive: new Color('#666666'), 
+      //emissiveIntensity: 0.2,
+      //blending: THREE.AdditiveBlending
+    });
+    //model.material = material;
+    model2.traverse((child: any) => {
+      if (child.isMesh) {
+        child.material = material;2
+      }
+    });
+    model2.scale.set(0.1, 0.1, 0.1);
+    model2.position.set(0, 25, 14);
+    model2.rotateX(Math.PI / 2);
+    model2.rotateZ(-Math.PI);
+    this.scene.add(model2);
   }
 
   //ok
