@@ -95,7 +95,7 @@ export default class FactoryWorld {
     model.scale.set(20, 20, 20);
     model.position.set(80, 60, 0);
     model.rotateX(Math.PI / 2);
-    model.translateZ(-20);
+    model.translateZ(-15);
     this.scene.add(model);
   }
 
