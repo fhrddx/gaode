@@ -170,8 +170,6 @@ export default class FactoryWorld {
     this.scene.add(model);
   }
 
-
-
   //ok
   async createMainMesh3() {
     //加载模型
@@ -204,10 +202,6 @@ export default class FactoryWorld {
     model.translateZ(-20);
     this.scene.add(model);
   }
-
-
-
-
 
   loadOneModel(sourceUrl) {
     const loader = new GLTFLoader();
