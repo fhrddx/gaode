@@ -45,8 +45,9 @@ export default class FactoryWorld {
 
     const axesHelper = new AxesHelper(1500)
     this.scene.add(axesHelper);
-    
+
     this.createMainMesh();
+    this.createMainMesh1();
 
     const group = new Group();
     this.scene.add(group);
@@ -98,6 +99,44 @@ export default class FactoryWorld {
     model.translateZ(-15);
     this.scene.add(model);
   }
+
+  async createMainMesh1() {
+    //加载模型
+    const model: any = await this.loadOneModel('../../../static/models/factory/sigenstackn.glb');
+    //给模型换一种材质
+    const material = new MeshStandardMaterial({
+      //自身颜色
+      color: 0x1171ee,
+      //透明度
+      transparent: true,
+      opacity: 1,
+      //金属性
+      metalness: 0.0,
+      //粗糙度
+      roughness: 0.5,
+      //发光颜色
+      //emissive: new Color('#666666'), 
+      //emissiveIntensity: 0.2,
+      //blending: THREE.AdditiveBlending
+    });
+    //model.material = material;
+    model.traverse((child: any) => {
+      if (child.isMesh) {
+        child.material = material;
+      }
+    });
+    model.scale.set(0.1, 0.1, 0.1);
+    model.position.set(0, 0, 0);
+    //model.rotateX(Math.PI / 2);
+    //model.translateZ(-15);
+    this.scene.add(model);
+  }
+
+
+
+
+
+
 
   loadOneModel(sourceUrl) {
     const loader = new GLTFLoader();
