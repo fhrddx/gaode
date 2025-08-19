@@ -204,7 +204,7 @@ export default class FactoryWorld {
     //给模型换一种材质
     const material2 = new MeshStandardMaterial({
       //自身颜色
-      color: 0x1171ee,
+      color: 0x666666,
       //透明度
       transparent: true,
       opacity: 1,
@@ -213,8 +213,8 @@ export default class FactoryWorld {
       //粗糙度
       roughness: 0.5,
       //发光颜色
-      //emissive: new Color('#666666'), 
-      //emissiveIntensity: 0.2,
+      emissive: new Color('#666666'), 
+      emissiveIntensity: 0.2,
       //blending: THREE.AdditiveBlending
     });
     //model.material = material;
