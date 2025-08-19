@@ -1,4 +1,4 @@
-import { AxesHelper, DirectionalLight, GridHelper, Group, HemisphereLight, MeshStandardMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { AxesHelper, Color, DirectionalLight, GridHelper, Group, HemisphereLight, MeshStandardMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -82,7 +82,7 @@ export default class FactoryWorld {
       //粗糙度
       roughness: 0.5,
       //发光颜色
-      //emissive: new Color('#1171ee'), 
+      //emissive: new Color('#666666'), 
       //emissiveIntensity: 0.2,
       //blending: THREE.AdditiveBlending
     });
