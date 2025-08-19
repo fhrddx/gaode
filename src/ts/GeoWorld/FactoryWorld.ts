@@ -35,6 +35,17 @@ export default class FactoryWorld {
   }
 
   createMap(){
+    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
+    hemiLight.position.set(100, 0, 0);
+    this.scene.add(hemiLight);
+
+    const dirLight = new DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(100, 10, 10);
+    this.scene.add(dirLight);
+
+    const axesHelper = new AxesHelper(1500)
+    this.scene.add(axesHelper);
+    
     this.createMainMesh();
 
     const group = new Group();
@@ -57,17 +68,6 @@ export default class FactoryWorld {
   }
 
   async createMainMesh() {
-    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
-    hemiLight.position.set(100, 0, 0);
-    this.scene.add(hemiLight);
-
-    const dirLight = new DirectionalLight(0xffffff, 1.5);
-    dirLight.position.set(100, 10, 10);
-    this.scene.add(dirLight);
-
-    const axesHelper = new AxesHelper(1500)
-    this.scene.add(axesHelper);
-
     //加载模型
     const model: any = await this.loadOneModel('../../../static/models/factory/grid01.glb');
     //给模型换一种材质
