@@ -70,6 +70,7 @@ export default class FactoryWorld {
     this.controls && this.controls.update();
   }
 
+  //ok
   async createMainMesh() {
     //加载模型
     const model: any = await this.loadOneModel('../../../static/models/factory/grid01.glb');
@@ -170,7 +171,7 @@ export default class FactoryWorld {
 
 
 
-
+  //ok
   async createMainMesh3() {
     //加载模型
     const model: any = await this.loadOneModel('../../../static/models/factory/xb.glb');
