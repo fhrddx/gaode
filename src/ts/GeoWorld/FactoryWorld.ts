@@ -130,13 +130,10 @@ export default class FactoryWorld {
       }
     });
     model.scale.set(0.1, 0.1, 0.1);
-    model.position.set(10, 10, 10);
+    model.position.set(0, -20, 14);
     model.rotateX(Math.PI / 2);
-    model.translateZ(-4);
     this.scene.add(model);
   }
-
-
 
   async createMainMesh2() {
     //加载模型
@@ -164,8 +161,8 @@ export default class FactoryWorld {
       }
     });
     model.scale.set(0.1, 0.1, 0.1);
-    model.position.set(0, 0, 0);
-    //model.rotateX(Math.PI / 2);
+    model.position.set(-3, -4, 11.5);
+    model.rotateY(-Math.PI / 2);
     //model.translateZ(-15);
     this.scene.add(model);
   }
