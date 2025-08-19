@@ -197,9 +197,9 @@ export default class FactoryWorld {
       }
     });
     model.scale.set(0.01, 0.01, 0.01);
-    model.position.set(-20, -20, -20);
-    //model.rotateX(Math.PI / 2);
-    //model.translateZ(-15);
+    model.position.set(80, -20, -20);
+    model.rotateY(-Math.PI / 2);
+    model.translateZ(-20);
     this.scene.add(model);
   }
 
