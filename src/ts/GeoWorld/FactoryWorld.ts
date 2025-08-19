@@ -69,7 +69,7 @@ export default class FactoryWorld {
     this.scene.add(axesHelper);
 
     //加载模型
-    const model: any = await this.loadOneModel('../../../static/models/taper2.glb');
+    const model: any = await this.loadOneModel('../../../static/models/factory/grid01.glb');
     //给模型换一种材质
     const material = new MeshStandardMaterial({
       //自身颜色
@@ -92,9 +92,10 @@ export default class FactoryWorld {
         child.material = material;
       }
     });
-    model.scale.set(1, 1, 1);
-    model.position.set(0, 0, 0);
-    model.rotateZ(Math.PI / 4);
+    model.scale.set(20, 20, 20);
+    model.position.set(80, 60, 0);
+    model.rotateX(Math.PI / 2);
+    model.translateZ(-20);
     this.scene.add(model);
   }
 
