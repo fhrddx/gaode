@@ -51,8 +51,8 @@ const world = new GaoDeWorld5('earth-canvas');
 world.init();
 */
 
-import FactoryWorld from './GeoWorld/FactoryWorld1';
-const world = new FactoryWorld({
+import FactoryWorld1 from './GeoWorld/FactoryWorld1';
+const world = new FactoryWorld1({
   dom: document.getElementById('earth-canvas')
 });
 

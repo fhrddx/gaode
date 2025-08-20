@@ -6,7 +6,7 @@ import { Basic } from "../world/Basic";
 import { Resources } from "../world/Resources";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-export default class FactoryWorld {
+export default class FactoryWorld1 {
   private scene: Scene;
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
