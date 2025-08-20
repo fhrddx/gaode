@@ -2,7 +2,7 @@ import { AdditiveBlending, AmbientLight, AxesHelper, CatmullRomCurve3, Direction
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
-import { Basic } from "../world/Basic";
+import { BasicWithCss } from "../world/BasicWithCss";
 import { Resources } from "../world/Resources";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -18,7 +18,7 @@ export default class FactoryWorld2 {
   private materialTrack: MeshBasicMaterial;
   
   constructor(option: IGeoWorld) {
-    const basic = new Basic(option.dom);
+    const basic = new BasicWithCss(option.dom);
     this.scene = basic.scene;
     this.camera = basic.camera;
     this.camera.position.set(0, -300, 200);
