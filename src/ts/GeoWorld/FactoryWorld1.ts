@@ -1,4 +1,4 @@
-import { AdditiveBlending, AmbientLight, AxesHelper, CatmullRomCurve3, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, LineCurve3, Mesh, MeshBasicMaterial, PerspectiveCamera, RepeatWrapping, Scene, TubeGeometry, Vector3, WebGLRenderer } from "three";
+import { AdditiveBlending, AmbientLight, AxesHelper, CatmullRomCurve3, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, LineCurve3, Mesh, MeshBasicMaterial, PerspectiveCamera, RepeatWrapping, Scene, Texture, TextureLoader, TubeGeometry, Vector3, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -13,6 +13,7 @@ export default class FactoryWorld {
   private controls: OrbitControls;
   private sizes: Sizes;
   private resources: Resources;
+  private pathLineTexture: Texture;
   
   constructor(option: IGeoWorld) {
     const basic = new Basic(option.dom);
@@ -60,6 +61,9 @@ export default class FactoryWorld {
     requestAnimationFrame(this.render.bind(this));
     this.renderer.render(this.scene, this.camera);
     this.controls && this.controls.update();
+    if(this.pathLineTexture){
+      this.pathLineTexture.offset.x -= 0.004;
+    }
   }
 
   async addModels(){
@@ -77,7 +81,7 @@ export default class FactoryWorld {
     const panels = await this.createPanels();
     group.add(panels);
     //流动线条
-    const lineGroup = this.createOutLine();
+    const lineGroup = await this.createOutLine();
     group.add(lineGroup);
     //加上所有的物品
     this.scene.add(group);
@@ -177,11 +181,17 @@ export default class FactoryWorld {
   }
 
   //创建线条
-  public createOutLine() {
+  public async createOutLine() {
     const group = new Group();
 
+    const loader = new TextureLoader();
+    const texture = await loader.loadAsync('../../../static/images/pathLine.png');
+    texture.wrapS = texture.wrapT = RepeatWrapping;
+    this.pathLineTexture = texture;
+
     const material = new MeshBasicMaterial({
-      color: 0x333333,
+      color: 0x00ffff,
+      map: texture,
       transparent: true,
       blending: AdditiveBlending,
       side: DoubleSide,
