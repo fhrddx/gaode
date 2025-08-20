@@ -85,7 +85,7 @@ export default class FactoryWorld {
     //加上所有的物品
     this.scene.add(group);
     //估计是倾斜40度能达到设计稿的效果
-    //group.rotateZ(-40 * Math.PI /180);
+    group.rotateZ(-40 * Math.PI /180);
   }
 
   //电塔
