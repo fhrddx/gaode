@@ -192,9 +192,9 @@ export default class FactoryWorld {
     });
 
     const curve1 = new CatmullRomCurve3([
-      new Vector3(0, -20, 0),
-      new Vector3(0, -40, 0),
-      new Vector3(-0.01, -40, 0),
+      new Vector3(-1, -20, 0),
+      new Vector3(-1, -40, 0),
+      new Vector3(-1.01, -40, 0),
       new Vector3(-40, -40, 0),
       new Vector3(-40, -39.99, 0),
       new Vector3(-40, -30, 0)
@@ -202,6 +202,18 @@ export default class FactoryWorld {
     const tubeGeometry1 = new TubeGeometry(curve1, 256 * 10, 0.3, 5, false);
     const line1 = new Mesh(tubeGeometry1, material);
     group.add(line1);
+
+    const curve2 = new CatmullRomCurve3([
+      new Vector3(1, -20, 0),
+      new Vector3(1, -40, 0),
+      new Vector3(1.01, -40, 0),
+      new Vector3(48, -40, 0),
+      new Vector3(48, -39.99, 0),
+      new Vector3(48, -30, 0)
+    ], false);
+    const tubeGeometry2 = new TubeGeometry(curve2, 256 * 10, 0.3, 5, false);
+    const line2 = new Mesh(tubeGeometry2, material);
+    group.add(line2);
 
     return group;
   }
