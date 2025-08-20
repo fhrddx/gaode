@@ -86,8 +86,9 @@ export default class FactoryWorld {
   //电塔
   async createElectricTower() {
     const model: any = await this.loadOneModel('../../../static/models/factory/grid01.glb');
-    model.scale.set(20, 20, 20);
-    model.position.set(80, 60, 0);
+    const size = 18;
+    model.scale.set(size, size, size);
+    model.position.set(50, 40, 0);
     model.rotateX(Math.PI / 2);
     model.translateZ(-15);
     return model;
@@ -97,7 +98,7 @@ export default class FactoryWorld {
   async createXiangbian() {
     const model: any = await this.loadOneModel('../../../static/models/factory/xb.glb');
     model.scale.set(0.01, 0.01, 0.01);
-    model.position.set(80, -20, -20);
+    model.position.set(48, -20, -20);
     model.rotateY(-Math.PI / 2);
     model.translateZ(-20);
     return model;
