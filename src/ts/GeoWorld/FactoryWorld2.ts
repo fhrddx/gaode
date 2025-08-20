@@ -93,7 +93,7 @@ export default class FactoryWorld2 {
     //加上所有的物品
     this.scene.add(group);
     //估计是倾斜40度能达到设计稿的效果
-    group.rotateZ(-40 * Math.PI /180);
+    //group.rotateZ(-40 * Math.PI /180);
   }
 
   //电塔
@@ -276,7 +276,25 @@ export default class FactoryWorld2 {
     const label = new CSS3DObject(tag);
     label.scale.set(0.3, 0.3, 0.3);
     label.position.set(0, -52, 0);
-    group.add(label)
+    group.add(label);
+
+    const content2 = `
+      <div class="sum">4.4kW &nbsp;</div>
+      <div class="name">SOLAR</div>
+    `;
+    const tag2 = document.createElement('div');
+    tag2.innerHTML = content2;
+    tag2.className = 'message-label-row';
+    tag2.style.position = 'absolute';
+    const label2 = new CSS3DObject(tag2);
+    label2.scale.set(0.3, 0.3, 0.3);
+    label2.position.set(-30, 0, 0);
+    label2.rotateZ(Math.PI / 2);
+    group.add(label2)
+
+
+
+
   }
   
   //加载3d模型
