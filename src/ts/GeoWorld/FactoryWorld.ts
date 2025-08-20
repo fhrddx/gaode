@@ -76,6 +76,9 @@ export default class FactoryWorld {
     //逆变器
     const batteryGroup = await this.createBattery();
     group.add(batteryGroup);
+    //光伏板
+    const panels = await this.createPanels();
+    group.add(panels);
     //加上所有的物品
     this.scene.add(group);
   }
@@ -134,7 +137,43 @@ export default class FactoryWorld {
 
     return group;
   }
-  
+
+  //光伏板
+  async createPanels(){
+    const group = new Group();
+
+    const model: any = await this.loadOneModel('../../../static/models/factory/pannel.glb');
+    const size = 15;
+    const height = 7;
+    const left = -40;
+    model.scale.set(size, size, size);
+    model.position.set(left, -30, height);
+    model.rotateX(Math.PI / 2);
+    group.add(model);
+
+    const model1 = model.clone();
+    model1.position.set(left, -17, height);
+    group.add(model1);
+
+    const model2 = model.clone();
+    model2.position.set(left, -4, height);
+    group.add(model2);
+
+    const model3 = model.clone();
+    model3.position.set(left, 9, height);
+    group.add(model3);
+
+    const model4 = model.clone();
+    model4.position.set(left, 22, height);
+    group.add(model4);
+
+    const model5 = model.clone();
+    model5.position.set(left, 35, height);
+    group.add(model5);
+
+    return group;
+  }
+
   //加载3d模型
   loadOneModel(sourceUrl) {
     const loader = new GLTFLoader();
