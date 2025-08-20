@@ -93,9 +93,8 @@ export default class FactoryWorld {
     const model: any = await this.loadOneModel('../../../static/models/factory/grid01.glb');
     const size = 18;
     model.scale.set(size, size, size);
-    model.position.set(50, 40, 0);
+    model.position.set(50, 40, 12.5);
     model.rotateX(Math.PI / 2);
-    model.translateZ(-15);
     return model;
   }
 
