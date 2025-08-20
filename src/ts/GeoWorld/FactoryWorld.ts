@@ -1,4 +1,4 @@
-import { AmbientLight, AxesHelper, DirectionalLight, GridHelper, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { AdditiveBlending, AmbientLight, AxesHelper, CatmullRomCurve3, DirectionalLight, DoubleSide, GridHelper, Group, HemisphereLight, LineCurve3, Mesh, MeshBasicMaterial, PerspectiveCamera, RepeatWrapping, Scene, TubeGeometry, Vector3, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -79,10 +79,13 @@ export default class FactoryWorld {
     //光伏板
     const panels = await this.createPanels();
     group.add(panels);
+    //流动线条
+    const lineGroup = this.createOutLine();
+    group.add(lineGroup);
     //加上所有的物品
     this.scene.add(group);
     //估计是倾斜40度能达到设计稿的效果
-    group.rotateZ(-40 * Math.PI /180);
+    //group.rotateZ(-40 * Math.PI /180);
   }
 
   //电塔
@@ -177,6 +180,31 @@ export default class FactoryWorld {
     return group;
   }
 
+  //创建线条
+  public createOutLine() {
+    const group = new Group();
+
+    const pathPoint: Vector3[] = [];
+    pathPoint.push(new Vector3(0, -20, 0));
+    pathPoint.push(new Vector3(0, -40, 0));
+    pathPoint.push(new Vector3(-0.01, -40, 0));
+    pathPoint.push(new Vector3(-40, -40, 0));
+    pathPoint.push(new Vector3(-40, -39.99, 0));
+    pathPoint.push(new Vector3(-40, -30, 0));
+    const curve = new CatmullRomCurve3(pathPoint, false);
+    const tubeGeometry = new TubeGeometry(curve, 256 * 10, 0.3, 5, false);
+    const material = new MeshBasicMaterial({
+      color: 0x333333,
+      transparent: true,
+      blending: AdditiveBlending,
+      side: DoubleSide,
+    });
+    const line1 = new Mesh(tubeGeometry, material);
+    group.add(line1);
+
+    return group;
+  }
+  
   //加载3d模型
   loadOneModel(sourceUrl) {
     const loader = new GLTFLoader();
