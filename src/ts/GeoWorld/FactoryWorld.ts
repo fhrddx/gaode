@@ -149,7 +149,7 @@ export default class FactoryWorld {
 
     const model: any = await this.loadOneModel('../../../static/models/factory/pannel.glb');
     const size = 15;
-    const height = 7;
+    const height = 3;
     const left = -40;
     model.scale.set(size, size, size);
     model.position.set(left, -30, height);
