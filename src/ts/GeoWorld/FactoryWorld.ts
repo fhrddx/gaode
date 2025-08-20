@@ -1,4 +1,4 @@
-import { AxesHelper, DirectionalLight, GridHelper, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { AmbientLight, AxesHelper, DirectionalLight, GridHelper, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -44,13 +44,16 @@ export default class FactoryWorld {
     grid.translateY(-5);
     this.scene.add(grid);
 
-    const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
-    hemiLight.position.set(100, 0, 0);
-    this.scene.add(hemiLight);
+    const ambientLight = new AmbientLight(0xffffff, 0.5);
+    this.scene.add(ambientLight);
 
-    const dirLight = new DirectionalLight(0xffffff, 1.5);
-    dirLight.position.set(100, 10, 10);
+    const dirLight = new DirectionalLight(0xffffff, 1);
+    dirLight.position.set(500, 0, 500);
     this.scene.add(dirLight);
+
+    const dirLight2 = new DirectionalLight(0xffffff, 0.5);
+    dirLight2.position.set(-100, -300, 300);
+    this.scene.add(dirLight2);
 
     this.addModels();
     this.render();
