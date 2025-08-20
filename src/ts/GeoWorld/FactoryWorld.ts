@@ -18,7 +18,7 @@ export default class FactoryWorld {
     const basic = new Basic(option.dom);
     this.scene = basic.scene;
     this.camera = basic.camera;
-    this.camera.position.set(0, -200, 250);
+    this.camera.position.set(0, -300, 200);
     this.renderer = basic.renderer;
     this.controls = basic.controls;
 
