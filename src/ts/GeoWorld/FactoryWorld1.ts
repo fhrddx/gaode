@@ -14,6 +14,8 @@ export default class FactoryWorld {
   private sizes: Sizes;
   private resources: Resources;
   private pathLineTexture: Texture;
+  private material: MeshBasicMaterial;
+  private materialTrack: MeshBasicMaterial;
   
   constructor(option: IGeoWorld) {
     const basic = new Basic(option.dom);
@@ -189,9 +191,16 @@ export default class FactoryWorld {
     texture.wrapS = texture.wrapT = RepeatWrapping;
     this.pathLineTexture = texture;
 
-    const material = new MeshBasicMaterial({
+    this.material = new MeshBasicMaterial({
       color: 0x00ffff,
       map: texture,
+      transparent: true,
+      blending: AdditiveBlending,
+      side: DoubleSide,
+    });
+
+    this.materialTrack = new MeshBasicMaterial({
+      color: 0x333333,
       transparent: true,
       blending: AdditiveBlending,
       side: DoubleSide,
@@ -205,9 +214,7 @@ export default class FactoryWorld {
       new Vector3(-40, -39.99, 0),
       new Vector3(-40, -30, 0)
     ], false);
-    const tubeGeometry1 = new TubeGeometry(curve1, 256 * 10, 0.3, 5, false);
-    const line1 = new Mesh(tubeGeometry1, material);
-    group.add(line1);
+    this.createTrackAndPathLine(group, curve1);
 
     const curve2 = new CatmullRomCurve3([
       new Vector3(1, -20, 0),
@@ -217,17 +224,13 @@ export default class FactoryWorld {
       new Vector3(48, -39.99, 0),
       new Vector3(48, -30, 0)
     ], false);
-    const tubeGeometry2 = new TubeGeometry(curve2, 256 * 10, 0.3, 5, false);
-    const line2 = new Mesh(tubeGeometry2, material);
-    group.add(line2);
+    this.createTrackAndPathLine(group, curve2);
 
     const curve3 = new CatmullRomCurve3([
       new Vector3(48, -2, 0),
       new Vector3(48, 40, 0),
     ], false);
-    const tubeGeometry3 = new TubeGeometry(curve3, 256 * 10, 0.3, 5, false);
-    const line3 = new Mesh(tubeGeometry3, material);
-    group.add(line3);
+    this.createTrackAndPathLine(group, curve3);
 
     const curve4 = new CatmullRomCurve3([
       new Vector3(-40, 35, 0),
@@ -237,11 +240,19 @@ export default class FactoryWorld {
       new Vector3(0, 44.9, 0),
       new Vector3(0, 25, 0),
     ], false);
-    const tubeGeometry4 = new TubeGeometry(curve4, 256 * 10, 0.3, 5, false);
-    const line4 = new Mesh(tubeGeometry4, material);
-    group.add(line4);
+    this.createTrackAndPathLine(group, curve4);
 
     return group;
+  }
+
+  createTrackAndPathLine(group: Group, position: CatmullRomCurve3){
+    const tubeGeometry = new TubeGeometry(position, 256 * 10, 0.3, 5, false);
+    const line = new Mesh(tubeGeometry, this.material);
+    group.add(line);
+
+    const tubeGeometrytrack = new TubeGeometry(position, 256 * 10, 0.3, 5, false);
+    const linetrack = new Mesh(tubeGeometrytrack, this.materialTrack);
+    group.add(linetrack);
   }
   
   //加载3d模型
