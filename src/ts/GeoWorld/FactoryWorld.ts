@@ -36,8 +36,8 @@ export default class FactoryWorld {
   }
 
   buildScene(){
-    const axesHelper = new AxesHelper(1500);
-    this.scene.add(axesHelper);
+    //const axesHelper = new AxesHelper(1500);
+    //this.scene.add(axesHelper);
 
     const grid = new GridHelper(300, 18, 0x122839, 0x122839);
     grid.rotateX(Math.PI / 2);
