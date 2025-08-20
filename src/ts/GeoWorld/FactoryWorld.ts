@@ -1,4 +1,4 @@
-import { AxesHelper, Color, DirectionalLight, GridHelper, Group, HemisphereLight, MeshStandardMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { AxesHelper, DirectionalLight, GridHelper, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { IGeoWorld } from "../interfaces/IGeoWorld";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Sizes from "../Utils/Sizes";
@@ -30,11 +30,20 @@ export default class FactoryWorld {
     })
 
     this.resources = new Resources(async () => {
-      this.createMap();
+      this.buildScene();
+      console.log(this.resources !== null);
     })
   }
 
-  createMap(){
+  buildScene(){
+    const axesHelper = new AxesHelper(1500);
+    this.scene.add(axesHelper);
+
+    const grid = new GridHelper(300, 18, 0x122839, 0x122839);
+    grid.rotateX(Math.PI / 2);
+    grid.translateY(-5);
+    this.scene.add(grid);
+
     const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 2);
     hemiLight.position.set(100, 0, 0);
     this.scene.add(hemiLight);
@@ -43,24 +52,7 @@ export default class FactoryWorld {
     dirLight.position.set(100, 10, 10);
     this.scene.add(dirLight);
 
-    const axesHelper = new AxesHelper(1500)
-    this.scene.add(axesHelper);
-
-    this.createMainMesh();
-    this.createMainMesh1();
-    this.createMainMesh2();
-    this.createMainMesh3();
-
-    const group = new Group();
-    this.scene.add(group);
-
-    const grid = new GridHelper(300, 18, 0x122839, 0x122839);
-    grid.name = 'map_grid';
-    grid.rotateX(Math.PI / 2);
-    grid.translateY(-5);
-    grid.renderOrder = 1;
-    group.add(grid);
-
+    this.addModels();
     this.render();
   }
 
@@ -70,206 +62,82 @@ export default class FactoryWorld {
     this.controls && this.controls.update();
   }
 
-  //ok
-  async createMainMesh() {
-    //加载模型
+  async addModels(){
+    const group = new Group();
+    //电塔
+    const tower = await this.createElectricTower();
+    group.add(tower);
+    //箱变
+    const xiangbian = await this.createXiangbian();
+    group.add(xiangbian);
+    //逆变器
+    const batteryGroup = await this.createBattery();
+    group.add(batteryGroup);
+    //加上所有的物品
+    this.scene.add(group);
+  }
+
+  //电塔
+  async createElectricTower() {
     const model: any = await this.loadOneModel('../../../static/models/factory/grid01.glb');
-    //给模型换一种材质
-    const material = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x1171ee,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      //emissive: new Color('#666666'), 
-      //emissiveIntensity: 0.2,
-      //blending: THREE.AdditiveBlending
-    });
-    //model.material = material;
-    model.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material;
-      }
-    });
     model.scale.set(20, 20, 20);
     model.position.set(80, 60, 0);
     model.rotateX(Math.PI / 2);
     model.translateZ(-15);
-    this.scene.add(model);
+    return model;
   }
 
-  //ok
-  async createMainMesh1() {
-    //加载模型
-    const model: any = await this.loadOneModel('../../../static/models/factory/sigenstackn.glb');
-    //给模型换一种材质
-    const material = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x1171ee,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      //emissive: new Color('#666666'), 
-      //emissiveIntensity: 0.2,
-      //blending: THREE.AdditiveBlending
-    });
-    //model.material = material;
-    model.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material;
-      }
-    });
-    model.scale.set(0.1, 0.1, 0.1);
-    model.position.set(0, -20, 14);
-    model.rotateX(Math.PI / 2);
-    this.scene.add(model);
-
-
-
-    //加载模型
-    const model2: any = await this.loadOneModel('../../../static/models/factory/sigenstackn.glb');
-    //给模型换一种材质
-    const material2 = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x1171ee,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      //emissive: new Color('#666666'), 
-      //emissiveIntensity: 0.2,
-      //blending: THREE.AdditiveBlending
-    });
-    //model.material = material;
-    model2.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material;2
-      }
-    });
-    model2.scale.set(0.1, 0.1, 0.1);
-    model2.position.set(0, 25, 14);
-    model2.rotateX(Math.PI / 2);
-    model2.rotateZ(-Math.PI);
-    this.scene.add(model2);
-  }
-
-  //ok
-  async createMainMesh2() {
-    //加载模型
-    const model: any = await this.loadOneModel('../../../static/models/factory/sigenstackb.glb');
-    //给模型换一种材质
-    const material = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x1171ee,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      //emissive: new Color('#666666'), 
-      //emissiveIntensity: 0.2,
-      //blending: THREE.AdditiveBlending
-    });
-    //model.material = material;
-    model.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material;
-      }
-    });
-    model.scale.set(0.1, 0.1, 0.1);
-    model.position.set(-3, -4, 11.5);
-    model.rotateY(-Math.PI / 2);
-    //model.translateZ(-15);
-    this.scene.add(model);
-
-    //加载模型
-    const model2: any = await this.loadOneModel('../../../static/models/factory/sigenstackb.glb');
-    //给模型换一种材质
-    const material2 = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x666666,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      emissive: new Color('#666666'), 
-      emissiveIntensity: 0.2,
-      //blending: THREE.AdditiveBlending
-    });
-    //model.material = material;
-    model2.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material2;
-      }
-    });
-    model2.scale.set(0.1, 0.1, 0.1);
-    model2.position.set(3, 9.8, 11.5);
-    model2.rotateY(-1 * Math.PI / 2);
-    model2.rotateZ(Math.PI);
-    this.scene.add(model2);
-  }
-
-  //ok
-  async createMainMesh3() {
-    //加载模型
+  //箱变
+  async createXiangbian() {
     const model: any = await this.loadOneModel('../../../static/models/factory/xb.glb');
-    //给模型换一种材质
-    const material = new MeshStandardMaterial({
-      //自身颜色
-      color: 0x1171ee,
-      //透明度
-      transparent: true,
-      opacity: 1,
-      //金属性
-      metalness: 0.0,
-      //粗糙度
-      roughness: 0.5,
-      //发光颜色
-      //emissive: new Color('#666666'), 
-      //emissiveIntensity: 0.2,
-      //blending: THREE.AdditiveBlending
-    });
-    //model.material = material;
-    model.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = material;
-      }
-    });
     model.scale.set(0.01, 0.01, 0.01);
     model.position.set(80, -20, -20);
     model.rotateY(-Math.PI / 2);
     model.translateZ(-20);
-    this.scene.add(model);
+    return model;
   }
 
+  //逆变器
+  async createBattery(){
+    const group = new Group();
+
+    const model: any = await this.loadOneModel('../../../static/models/factory/sigenstackn.glb');
+    const modelAfter: any = model.clone();
+
+    model.scale.set(0.1, 0.1, 0.1);
+    model.position.set(0, -20, 14);
+    model.rotateX(Math.PI / 2);
+    group.add(model);
+
+    modelAfter.scale.set(0.1, 0.1, 0.1);
+    modelAfter.position.set(0, 25, 14);
+    modelAfter.rotateX(Math.PI / 2);
+    modelAfter.rotateZ(-Math.PI);
+    group.add(modelAfter);
+
+    const stackModel: any = await this.loadOneModel('../../../static/models/factory/sigenstackb.glb');
+    const stackModelClone = stackModel.clone();
+
+    stackModel.scale.set(0.1, 0.1, 0.1);
+    stackModel.position.set(-3, -4, 11.5);
+    stackModel.rotateY(-Math.PI / 2);
+    group.add(stackModel);
+
+    stackModelClone.scale.set(0.1, 0.1, 0.1);
+    stackModelClone.position.set(3, 9.8, 11.5);
+    stackModelClone.rotateY(-1 * Math.PI / 2);
+    stackModelClone.rotateZ(Math.PI);
+    group.add(stackModelClone);
+
+    return group;
+  }
+  
+  //加载3d模型
   loadOneModel(sourceUrl) {
     const loader = new GLTFLoader();
     return new Promise(resolve => {
       loader.load(sourceUrl, (gltf) => {
-        //获取模型
         const mesh = gltf.scene.children[0];
-        //放大模型以便观察
         const size = 100;
         mesh.scale.set(size, size, size);
         this.scene.add(mesh);
