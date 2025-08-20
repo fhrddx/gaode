@@ -184,22 +184,23 @@ export default class FactoryWorld {
   public createOutLine() {
     const group = new Group();
 
-    const pathPoint: Vector3[] = [];
-    pathPoint.push(new Vector3(0, -20, 0));
-    pathPoint.push(new Vector3(0, -40, 0));
-    pathPoint.push(new Vector3(-0.01, -40, 0));
-    pathPoint.push(new Vector3(-40, -40, 0));
-    pathPoint.push(new Vector3(-40, -39.99, 0));
-    pathPoint.push(new Vector3(-40, -30, 0));
-    const curve = new CatmullRomCurve3(pathPoint, false);
-    const tubeGeometry = new TubeGeometry(curve, 256 * 10, 0.3, 5, false);
     const material = new MeshBasicMaterial({
       color: 0x333333,
       transparent: true,
       blending: AdditiveBlending,
       side: DoubleSide,
     });
-    const line1 = new Mesh(tubeGeometry, material);
+
+    const curve1 = new CatmullRomCurve3([
+      new Vector3(0, -20, 0),
+      new Vector3(0, -40, 0),
+      new Vector3(-0.01, -40, 0),
+      new Vector3(-40, -40, 0),
+      new Vector3(-40, -39.99, 0),
+      new Vector3(-40, -30, 0)
+    ], false);
+    const tubeGeometry1 = new TubeGeometry(curve1, 256 * 10, 0.3, 5, false);
+    const line1 = new Mesh(tubeGeometry1, material);
     group.add(line1);
 
     return group;
