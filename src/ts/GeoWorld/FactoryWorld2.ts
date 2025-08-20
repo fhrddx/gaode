@@ -5,11 +5,13 @@ import Sizes from "../Utils/Sizes";
 import { BasicWithCss } from "../world/BasicWithCss";
 import { Resources } from "../world/Resources";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer";
 
 export default class FactoryWorld2 {
   private scene: Scene;
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
+  private css3DRenderer: CSS3DRenderer;
   private controls: OrbitControls;
   private sizes: Sizes;
   private resources: Resources;
@@ -23,11 +25,13 @@ export default class FactoryWorld2 {
     this.camera = basic.camera;
     this.camera.position.set(0, -300, 200);
     this.renderer = basic.renderer;
+    this.css3DRenderer = basic.css3DRenderer;
     this.controls = basic.controls;
 
     this.sizes = new Sizes({ dom: option.dom })
     this.sizes.$on('resize', () => {
       this.renderer.setSize(Number(this.sizes.viewport.width), Number(this.sizes.viewport.height));
+      this.css3DRenderer.setSize(Number(this.sizes.viewport.width), Number(this.sizes.viewport.height));
       this.camera.aspect = Number(this.sizes.viewport.width) / Number(this.sizes.viewport.height);
       this.camera.updateProjectionMatrix();
     })
@@ -62,6 +66,7 @@ export default class FactoryWorld2 {
   render() {
     requestAnimationFrame(this.render.bind(this));
     this.renderer.render(this.scene, this.camera);
+    this.css3DRenderer.render(this.scene, this.camera);
     this.controls && this.controls.update();
     if(this.pathLineTexture){
       this.pathLineTexture.offset.x -= 0.004;
@@ -179,6 +184,8 @@ export default class FactoryWorld2 {
     model5.position.set(left, 35, height);
     group.add(model5);
 
+    this.createCssTags(group);
+
     return group;
   }
 
@@ -253,6 +260,23 @@ export default class FactoryWorld2 {
     const tubeGeometrytrack = new TubeGeometry(position, 256 * 10, 0.3, 5, false);
     const linetrack = new Mesh(tubeGeometrytrack, this.materialTrack);
     group.add(linetrack);
+  }
+
+  //创建3d的css
+  createCssTags(group){
+    const content = `
+      <div class="sum">4.4kW 100%</div>
+      <div class="name">Sigen stack 90X</div>
+      <div class="info">Charging</div>
+    `;
+    const tag = document.createElement('div');
+    tag.innerHTML = content;
+    tag.className = 'message-label';
+    tag.style.position = 'absolute';
+    const label = new CSS3DObject(tag);
+    label.scale.set(0.3, 0.3, 0.3);
+    label.position.set(0, -52, 0);
+    group.add(label)
   }
   
   //加载3d模型

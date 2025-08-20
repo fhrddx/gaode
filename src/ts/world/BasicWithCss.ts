@@ -23,13 +23,15 @@ export class BasicWithCss {
     this.renderer.setSize(containerWidth, containerHeight);
     this.renderer.autoClear = true;
     dom.appendChild(this.renderer.domElement);
+
     this.css3DRenderer = new CSS3DRenderer();
     this.css3DRenderer.setSize(containerWidth, containerHeight);
     this.css3DRenderer.domElement.style.position = 'absolute';
     this.css3DRenderer.domElement.style.top = '0';
     this.css3DRenderer.domElement.style.left = '0';
-    this.css3DRenderer.domElement.style.zIndex = '100';
+    this.css3DRenderer.domElement.style.zIndex = '1000';
     dom.appendChild(this.css3DRenderer.domElement);
+    
     this.controls = new OrbitControls(this.camera, this.css3DRenderer.domElement);
     this.controls.autoRotateSpeed = 3;
     this.controls.enableDamping = true;
