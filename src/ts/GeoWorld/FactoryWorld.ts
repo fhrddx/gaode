@@ -223,6 +223,18 @@ export default class FactoryWorld {
     const line3 = new Mesh(tubeGeometry3, material);
     group.add(line3);
 
+    const curve4 = new CatmullRomCurve3([
+      new Vector3(-40, 35, 0),
+      new Vector3(-40, 44.9, 0),
+      new Vector3(-40, 45, 0),
+      new Vector3(0, 45, 0),
+      new Vector3(0, 44.9, 0),
+      new Vector3(0, 25, 0),
+    ], false);
+    const tubeGeometry4 = new TubeGeometry(curve4, 256 * 10, 0.3, 5, false);
+    const line4 = new Mesh(tubeGeometry4, material);
+    group.add(line4);
+
     return group;
   }
   
